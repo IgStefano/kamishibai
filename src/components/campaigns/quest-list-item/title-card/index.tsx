@@ -50,7 +50,7 @@ export default function TitleCard({
   return (
     <div
       className={classnames(
-        "relative flex items-center rounded bg-burgundy-400 py-1 text-gray-50 drop-shadow-default",
+        "relative flex w-full items-center rounded bg-burgundy-400 py-1 text-gray-50 drop-shadow-default",
         notoSans.className
       )}
     >
@@ -65,7 +65,7 @@ export default function TitleCard({
         )}
       </div>
 
-      <div className="flex flex-col justify-center gap-1">
+      <div className="flex w-full flex-col justify-center gap-1">
         <h5 className={classnames("text-xs italic text-gray-50")}>{title}</h5>
         {getSubtitle()}
       </div>

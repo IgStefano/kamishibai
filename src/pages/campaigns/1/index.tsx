@@ -19,13 +19,18 @@ export default function CampaignQuests() {
       subHeading="Hypernatural"
       setIsModalOpen={setIsOpen}
     >
-      <section className="mt-4 flex flex-col gap-3">
+      <ul className="mt-4 flex list-none flex-col gap-4">
         <QuestListItem
           id="1"
           openQuests={openQuests}
           setOpenQuests={setOpenQuests}
         />
-      </section>
+        <QuestListItem
+          id="2"
+          openQuests={openQuests}
+          setOpenQuests={setOpenQuests}
+        />
+      </ul>
       <Modal
         buttonLabel="Criar Aventura"
         content={<Input label="Nome da Aventura" name="questName" required />}
