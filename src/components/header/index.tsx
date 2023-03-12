@@ -1,29 +1,36 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { Icon } from "@iconify/react";
-import localFont from "@next/font/local";
+import { LTCarpet } from "@pages/_app";
 import { signOut } from "next-auth/react";
+import type { Dispatch, SetStateAction } from "react";
 import { dosis } from "../../styles/fonts";
-const LTCarpet = localFont({
-  src: "../../../public/assets/fonts/LT Carpet/LTCarpet.ttf",
-});
+import { classnames } from "../../utils/classnames";
 
 interface HeaderProps {
   message?: string;
+  subHeading?: string;
   addIcon?: boolean;
   isLogged?: boolean;
+  setIsModalOpen: Dispatch<SetStateAction<boolean>>;
 }
 
 export default function Header({
   message = "",
+  subHeading = "",
   addIcon = false,
   isLogged = false,
+  setIsModalOpen,
 }: HeaderProps) {
   return (
-    <header className="flex flex-col">
-      <div className="flex items-center justify-between pb-6">
+    <header className="flex flex-col gap-4">
+      <div className="flex items-center justify-between">
         <h1
-          className={`w-full ${
-            !isLogged ? "text-center" : ""
-          } text-4xl font-medium text-burgundy ${LTCarpet.className}`}
+          className={classnames(
+            "w-full text-4xl font-medium text-burgundy",
+            !isLogged ? "text-center" : "",
+            LTCarpet.className
+          )}
         >
           Kamishibai
         </h1>
@@ -36,17 +43,30 @@ export default function Header({
           </span>
         )}
       </div>
+      {subHeading && (
+        <h2
+          className={classnames(
+            "w-full text-2xl font-medium text-gray-500",
+            LTCarpet.className
+          )}
+        >
+          Hypernatural
+        </h2>
+      )}
       {message && (
         <div className="flex justify-between gap-2">
           <h4
-            className={`w-full ${dosis.className} ${
+            className={classnames(
+              `w-full text-base text-gray-500`,
+              dosis.className,
               !addIcon ? "text-center font-medium" : ""
-            } text-base text-gray-500`}
+            )}
           >
             {message}
           </h4>
           {addIcon && (
             <Icon
+              onClick={() => setIsModalOpen(true)}
               style={{ clipPath: "circle(45%)" }}
               className="clip cursor-pointer rounded-full text-[32px] text-burgundy transition-colors duration-300 hover:bg-burgundy hover:text-gray-50"
               icon="ph:plus-circle"

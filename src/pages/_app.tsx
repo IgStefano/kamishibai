@@ -6,7 +6,11 @@ import { api } from "../utils/api";
 
 import "../styles/globals.css";
 import Head from "next/head";
+import localFont from "@next/font/local";
 import { notoSans } from "../styles/fonts";
+export const LTCarpet = localFont({
+  src: "../../public/assets/fonts/LT Carpet/LTCarpet.ttf",
+});
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
