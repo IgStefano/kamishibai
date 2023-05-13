@@ -1,4 +1,4 @@
-import Input from "@components/Input";
+import Input from "@components/form/input";
 import type { IncomingMessage, ServerResponse } from "http";
 import { useState } from "react";
 import CampaignListItem from "../../components/campaigns/campaign-list-item";

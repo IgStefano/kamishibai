@@ -21,7 +21,7 @@ export default function Layout({
   setIsModalOpen,
 }: LayoutProps) {
   return (
-    <main className={`w-full ${className}`}>
+    <section className={`w-full ${className}`}>
       <Header
         message={message}
         subHeading={subHeading}
@@ -30,6 +30,6 @@ export default function Layout({
         setIsModalOpen={setIsModalOpen}
       />
       {children}
-    </main>
+    </section>
   );
 }
