@@ -1,20 +1,11 @@
 generator client {
-    provider = "prisma-client-js"
+    provider        = "prisma-client-js"
+    previewFeatures = ["jsonProtocol"]
 }
 
 datasource db {
     provider = "postgresql"
-    // NOTE: When using postgresql, mysql or sqlserver, uncomment the @db.Text annotations in model Account below
-    // Further reading:
-    // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
-    // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
     url      = env("DATABASE_URL")
-}
-
-model Example {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
 }
 
 // Necessary for Next auth
@@ -45,13 +36,14 @@ model Session {
 }
 
 model User {
-    id            String    @id @default(cuid())
+    id            String     @id @default(cuid())
     name          String?
-    email         String?   @unique
+    email         String?    @unique
     emailVerified DateTime?
     image         String?
     accounts      Account[]
     sessions      Session[]
+    Campaign      Campaign[]
 }
 
 model VerificationToken {
@@ -60,4 +52,41 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+model Campaign {
+    id         String  @id @unique
+    gameMaster String
+    name       String
+    image      String?
+    quests     Quest[]
+    players    User[]
+}
+
+model Quest {
+    id               String     @id @unique
+    name             String
+    creationTime     DateTime
+    recommendedLevel Int?
+    nextObjective    String?
+    activities       Activity[]
+    isVisible        Boolean
+    Reward           String?
+    Campaign         Campaign   @relation(fields: [campaignId], references: [id])
+    campaignId       String
+}
+
+model Activity {
+    id      String  @id @unique
+    name    String
+    status  Int
+    Quest   Quest?  @relation(fields: [questId], references: [id])
+    questId String?
+}
+
+model UserCampaignRoles {
+    id         String @id @unique
+    userId     String
+    campaignId String
+    role       Int
 }
