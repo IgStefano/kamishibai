@@ -1,8 +1,7 @@
-import { notoSans } from "@/src/styles/fonts";
 import { Icon } from "@iconify/react";
 import { classnames } from "@utils/classnames";
 import { formatDate } from "@utils/formatDate";
-import type { Dispatch, SetStateAction } from "react";
+import { Fragment } from "react";
 
 type Objective = {
   name: string;
@@ -60,13 +59,11 @@ export default function Description({
     { name: "Nível recomendado", content: level?.toString() || "" },
   ];
 
-  const item = (title: string, text: string) => {
+  const item = (title: string, text: string, index: number) => {
     return (
       <p
-        className={classnames(
-          "text-[10px] italic text-gray-900",
-          !isOpen ? "hidden" : ""
-        )}
+        key={title + index.toString()}
+        className={classnames("text-xs italic text-gray-900")}
       >
         <span className="font-bold not-italic">{title}:</span> {text}
       </p>
@@ -75,28 +72,28 @@ export default function Description({
 
   return (
     <div
+      onAnimationEnd={(e) => console.log(e.currentTarget)}
       className={classnames(
-        "flex flex-col gap-4 transition-all duration-300",
-        !isOpen ? "pointer-events-none -translate-y-1/2  opacity-0" : "mt-4"
+        "flex flex-col gap-4 overflow-hidden transition-all duration-500",
+        !isOpen ? "pointer-events-none max-h-0 opacity-0" : "mt-4 max-h-screen"
       )}
     >
       <div className="flex flex-col gap-2">
-        {renderedItems.map((currentItem) => {
-          if (!currentItem.content) return <></>;
-          return item(currentItem.name, currentItem.content);
+        {renderedItems.map((currentItem, index) => {
+          if (!currentItem.content) return <Fragment key={index} />;
+          return item(currentItem.name, currentItem.content, index);
         })}
       </div>
       <div
         className={classnames(
-          "flex flex-col gap-2 rounded bg-gray-200 px-4 py-2 drop-shadow-default",
-          !isOpen ? "hidden" : ""
+          "flex flex-col gap-2 rounded bg-gray-200 px-4 pt-2 pb-4 drop-shadow-default"
         )}
       >
         <h6 className="text-center font-bold text-burgundy-400">
           Registro de Atividades
         </h6>
         <div className="flex flex-col gap-1">
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-2">
             {objectives.map((objective) => {
               const iconData = icons.find(
                 (state) => state.status === objective.state
