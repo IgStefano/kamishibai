@@ -66,6 +66,7 @@ export const createTRPCContext = async (opts: CreateNextContextOptions) => {
  */
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
+import { z } from "zod";
 
 const t = initTRPC.context<typeof createTRPCContext>().create({
   transformer: superjson,
@@ -122,3 +123,22 @@ const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
  * @see https://trpc.io/docs/procedures
  */
 export const protectedProcedure = t.procedure.use(enforceUserIsAuthed);
+export const gameMasterProcedure = protectedProcedure
+  .input(z.object({ campaignId: z.string().cuid() }))
+  .use(async (opts) => {
+    const { ctx, input, next } = opts;
+
+    const gameMaster = await ctx.prisma.campaign.findFirst({
+      where: {
+        id: input.campaignId,
+      },
+      select: {
+        gameMaster: true,
+      },
+    });
+
+    if (ctx.session.user.id !== gameMaster?.gameMaster) {
+      throw new TRPCError({ code: "UNAUTHORIZED" });
+    }
+    return next();
+  });

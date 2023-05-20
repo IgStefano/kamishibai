@@ -55,29 +55,31 @@ model VerificationToken {
 }
 
 model Campaign {
-    id         String  @id @unique
+    id         String  @id @unique @default(cuid())
     gameMaster String
     name       String
     image      String?
     quests     Quest[]
     players    User[]
+    status     Int     @default(1)
 }
 
 model Quest {
-    id               String     @id @unique
+    id               String     @id @unique @default(cuid())
     name             String
-    creationTime     DateTime
+    createdAt        DateTime   @default(now())
     recommendedLevel Int?
     nextObjective    String?
     activities       Activity[]
-    isVisible        Boolean
-    Reward           String?
+    isVisible        Boolean    @default(true)
+    reward           String?
     Campaign         Campaign   @relation(fields: [campaignId], references: [id])
     campaignId       String
+    status           Int        @default(1)
 }
 
 model Activity {
-    id      String  @id @unique
+    id      String  @id @unique @default(cuid())
     name    String
     status  Int
     Quest   Quest?  @relation(fields: [questId], references: [id])
@@ -85,7 +87,7 @@ model Activity {
 }
 
 model UserCampaignRoles {
-    id         String @id @unique
+    id         String @id @unique @default(cuid())
     userId     String
     campaignId String
     role       Int
