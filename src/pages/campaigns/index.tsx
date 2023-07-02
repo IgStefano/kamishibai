@@ -7,9 +7,21 @@ import Layout from "../../components/layout";
 import Modal from "../../components/layout/modal";
 import { getServerAuthSession } from "../../server/auth";
 import { dosis } from "../../styles/fonts";
+import { api } from "@utils/api";
 
 export default function Campaigns() {
   const [isOpen, setIsOpen] = useState(false);
+  const campaigns = api.campaign.getCampaigns.useQuery({}).data;
+  const mutation = api.campaign.newCampaign.useMutation();
+
+  const handleCreateCampaign = () => {
+    const campaignName =
+      (document.getElementById("campaignName") as HTMLInputElement)?.value ||
+      "";
+    mutation.mutate({ campaignName });
+
+    setIsOpen(false);
+  };
 
   return (
     <Layout
@@ -23,13 +35,14 @@ export default function Campaigns() {
         Selecione uma campanha para ver suas aventuras!
       </p>
       <section className="flex flex-col gap-3">
-        <CampaignListItem
-          master="Deneime"
-          title="Laminaobscura e a Era Dracônica"
-        />
-        <CampaignListItem master="Deneime" title="Hypernatural" />
-        <CampaignListItem master="Deneime" title="Assassinos de Enigmas" />
-        <CampaignListItem master="Deneime" title="A Morte de uma Estrela" />
+        {campaigns?.map((campaign) => (
+          <CampaignListItem
+            key={campaign.id}
+            id={campaign.id}
+            master={campaign.gameMaster}
+            title={campaign.name}
+          />
+        ))}
       </section>
       <Modal
         buttonLabel="Criar Campanha"
@@ -39,6 +52,7 @@ export default function Campaigns() {
         title="Crie a sua campanha"
         isOpen={isOpen}
         setIsOpen={setIsOpen}
+        mutation={handleCreateCampaign}
       />
     </Layout>
   );
