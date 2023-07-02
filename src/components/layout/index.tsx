@@ -8,7 +8,7 @@ interface LayoutProps {
   subHeading?: string;
   addIcon?: boolean;
   isLogged?: boolean;
-  setIsModalOpen: Dispatch<SetStateAction<boolean>>;
+  setIsModalOpen?: Dispatch<SetStateAction<boolean>>;
 }
 
 export default function Layout({

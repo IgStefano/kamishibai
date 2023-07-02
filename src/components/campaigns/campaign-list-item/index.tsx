@@ -23,7 +23,7 @@ export default function CampaignListItem({
   return (
     <li
       className="relative flex w-full gap-4 rounded-3xl bg-lightYellow py-1 px-4 drop-shadow-default"
-      onClick={() => void router.push(`/${id}`)}
+      onClick={() => void router.push(`/campaigns/${id}`)}
     >
       <div className={`h-8 w-8 rounded-full bg-gray-400`}>
         {image?.url && (

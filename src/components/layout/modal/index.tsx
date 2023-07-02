@@ -12,6 +12,7 @@ interface ModalProps {
   content: ReactNode | ReactNode[];
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
+  mutation: () => void;
 }
 
 export default function Modal({
@@ -20,11 +21,13 @@ export default function Modal({
   title,
   isOpen,
   setIsOpen,
+  mutation,
 }: ModalProps) {
   const modalRef = useOutsideClickRef({ setIsOpen: setIsOpen });
 
   return (
     <section
+      role="dialog"
       className={classnames(
         "absolute top-0 right-0 flex h-full w-full items-center justify-center bg-[#000] bg-opacity-80 transition-all duration-300",
         !isOpen ? "pointer-events-none opacity-0" : ""
@@ -33,7 +36,7 @@ export default function Modal({
       <div
         ref={modalRef}
         role="dialog"
-        className="relative flex flex-col items-center justify-center gap-4 rounded-lg bg-gray-50 p-6"
+        className="relative flex max-h-[85vh] w-[40vw] flex-col items-center justify-center gap-4 rounded-lg bg-gray-50 p-6"
       >
         <h3
           className={classnames(
@@ -43,8 +46,8 @@ export default function Modal({
         >
           {title}
         </h3>
-        <div className="w-full">{content}</div>
-        <Button label={buttonLabel} onClick={() => setIsOpen(false)} />
+        <div className="max-h-[60vh] w-full overflow-y-auto">{content}</div>
+        <Button label={buttonLabel} onClick={mutation} />
       </div>
     </section>
   );

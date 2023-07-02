@@ -12,7 +12,7 @@ interface HeaderProps {
   subHeading?: string;
   addIcon?: boolean;
   isLogged?: boolean;
-  setIsModalOpen: Dispatch<SetStateAction<boolean>>;
+  setIsModalOpen?: Dispatch<SetStateAction<boolean>>;
 }
 
 export default function Header({
@@ -64,7 +64,7 @@ export default function Header({
           >
             {message}
           </h4>
-          {addIcon && (
+          {addIcon && setIsModalOpen && (
             <Icon
               onClick={() => setIsModalOpen(true)}
               style={{ clipPath: "circle(45%)" }}

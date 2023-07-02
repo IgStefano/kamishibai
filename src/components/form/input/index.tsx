@@ -1,9 +1,9 @@
 import { Icon } from "@iconify/react";
 import { classnames } from "@utils/classnames";
-import type { Dispatch, SetStateAction } from "react";
+import type { ComponentPropsWithoutRef, Dispatch, SetStateAction } from "react";
 import { useState } from "react";
 
-interface InputProps {
+interface InputProps extends ComponentPropsWithoutRef<"input"> {
   name: string;
   label: string;
   required?: boolean;
@@ -25,6 +25,7 @@ export default function Input({
   hidden = false,
   activities,
   setActivities,
+  ...rest
 }: InputProps) {
   const [value, setValue] = useState("");
   const handleAddActivity = () => {
@@ -52,6 +53,7 @@ export default function Input({
           onKeyDown={(e) => {
             e.key === "Enter" && addNew && handleAddActivity();
           }}
+          {...rest}
         />
         {addNew && setActivities && activities && (
           <Icon

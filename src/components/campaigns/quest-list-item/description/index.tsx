@@ -17,9 +17,9 @@ interface DescriptionProps {
   id: string;
   title: string;
   level?: string | number;
-  description: string;
+  description?: string;
   startDate: Date;
-  reward: string;
+  reward?: string;
   objectives: Objective[];
   openQuests: string[];
 }
@@ -47,7 +47,7 @@ export default function Description({
   const isOpen = openQuests.includes(id);
 
   const renderedItems: renderedItem[] = [
-    { name: "Descrição", content: description },
+    { name: "Descrição", content: description || "" },
     {
       name: "Objetivo atual",
       content:
@@ -55,7 +55,7 @@ export default function Description({
           ?.name || "",
     },
     { name: "Início", content: formatDate(startDate) },
-    { name: "Recompensa", content: reward },
+    { name: "Recompensa", content: reward || "" },
     { name: "Nível recomendado", content: level?.toString() || "" },
   ];
 
