@@ -42,7 +42,7 @@ export default function Description({
       icon: "ph:minus-bold",
       color: "text-gray-600",
     },
-    { status: "not_started", icon: "", color: "" },
+    { status: "not_started", icon: "ph:minus-bold", color: "text-gray-600" },
   ];
   const isOpen = openQuests.includes(id);
 
@@ -106,7 +106,11 @@ export default function Description({
                   }
                 >
                   {iconData !== undefined && (
-                    <Icon icon={iconData.icon} className={iconData.color} />
+                    <Icon
+                      fontSize={24}
+                      icon={iconData.icon}
+                      className={iconData.color}
+                    />
                   )}
                   {objective.name}
                 </div>

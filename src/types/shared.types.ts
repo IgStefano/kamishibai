@@ -46,7 +46,7 @@ export type Player = z.infer<typeof Player>;
 
 export type Quest = z.infer<typeof Quest> & {
   campaign?: Campaign;
-  activities?: Activity[];
+  activities: Activity[];
 };
 
 export type Campaign = z.infer<typeof Campaign> & {

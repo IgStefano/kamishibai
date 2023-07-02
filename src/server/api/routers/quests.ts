@@ -13,6 +13,12 @@ export const questRouter = createTRPCRouter({
       z.object({
         questName: z.string().min(5).max(64),
         description: z.string().min(3).max(1280).optional(),
+        nextObjective: z.object({
+          activityName: z.string().min(5).max(64),
+          activityStatus: z
+            .enum(["success", "failure", "in_progress", "not_started"])
+            .default("in_progress"),
+        }),
         activities: z
           .array(
             z.object({
@@ -50,7 +56,7 @@ export const questRouter = createTRPCRouter({
           isVisible: input.isVisible || true,
           reward: input.reward,
           recommendedLevel: input.recommendedLevel,
-          nextObjective: input.activities[0]?.activityName,
+          nextObjective: input.nextObjective.activityName,
           campaignId: input.campaignId,
         },
       });

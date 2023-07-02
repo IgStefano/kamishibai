@@ -41,6 +41,10 @@ export default function CampaignQuests() {
           .map((activity) => {
             return { activityName: activity, activityStatus: "not_started" };
           }),
+        nextObjective: {
+          activityName: formData.get("objective")!.toString(),
+          activityStatus: "in_progress",
+        },
         campaignId: campaign.id,
         description: formData.get("description")!.toString(),
         isVisible: true,
