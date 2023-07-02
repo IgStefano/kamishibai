@@ -43,7 +43,7 @@ model User {
     image         String?
     accounts      Account[]
     sessions      Session[]
-    Campaign      Campaign[]
+    campaigns     Campaign[]
 }
 
 model VerificationToken {
@@ -67,23 +67,24 @@ model Campaign {
 model Quest {
     id               String     @id @unique @default(cuid())
     name             String
+    description      String?
     createdAt        DateTime   @default(now())
     recommendedLevel Int?
     nextObjective    String?
     activities       Activity[]
     isVisible        Boolean    @default(true)
     reward           String?
-    Campaign         Campaign   @relation(fields: [campaignId], references: [id])
+    campaign         Campaign   @relation(fields: [campaignId], references: [id])
     campaignId       String
     status           Int        @default(1)
 }
 
 model Activity {
-    id      String  @id @unique @default(cuid())
+    id      String @id @unique @default(cuid())
     name    String
     status  Int
-    Quest   Quest?  @relation(fields: [questId], references: [id])
-    questId String?
+    quest   Quest  @relation(fields: [questId], references: [id])
+    questId String
 }
 
 model UserCampaignRoles {

@@ -1,26 +1,22 @@
+import { ActivityStatus } from "@/src/types/shared.types";
 import {
   createTRPCRouter,
   gameMasterProcedure,
   protectedProcedure,
 } from "../trpc";
 import { z } from "zod";
-
-enum ActivityStatus {
-  "not_started" = 0,
-  "in_progress" = 1,
-  "success" = 2,
-  "failure" = 3,
-}
+import { questMapper } from "./mappers";
 
 export const questRouter = createTRPCRouter({
   newQuest: protectedProcedure
     .input(
       z.object({
         questName: z.string().min(5).max(64),
+        description: z.string().min(3).max(1280).optional(),
         activities: z
           .array(
             z.object({
-              activityName: z.string().min(5).max(32),
+              activityName: z.string().min(5).max(64),
               activityStatus: z.enum([
                 "success",
                 "failure",
@@ -32,14 +28,15 @@ export const questRouter = createTRPCRouter({
           .min(1),
         recommendedLevel: z.number().min(1).optional(),
         isVisible: z.boolean().optional(),
-        reward: z.string().min(3).max(32).optional(),
-        campaignId: z.string().cuid(),
+        reward: z.string().min(3).max(64).optional(),
+        campaignId: z.string(),
       })
     )
     .mutation(async ({ ctx, input }) => {
       return ctx.prisma.quest.create({
         data: {
           name: input.questName,
+          description: input.description,
           activities: {
             createMany: {
               data: input.activities.map((activity) => {
@@ -62,8 +59,9 @@ export const questRouter = createTRPCRouter({
   editQuest: gameMasterProcedure
     .input(
       z.object({
-        questId: z.string().cuid(),
+        questId: z.string(),
         questName: z.string().min(5).max(64).optional(),
+        description: z.string().min(3).max(128).optional(),
         activities: z
           .array(
             z.object({
@@ -80,7 +78,7 @@ export const questRouter = createTRPCRouter({
         recommendedLevel: z.number().min(1).optional(),
         isVisible: z.boolean().optional(),
         reward: z.string().min(3).max(32).optional(),
-        campaignId: z.string().cuid().optional(),
+        campaignId: z.string().optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -90,6 +88,7 @@ export const questRouter = createTRPCRouter({
         },
         data: {
           name: input.questName,
+          description: input.description,
           activities: {
             createMany: {
               data: input.activities.map((activity) => {
@@ -113,7 +112,7 @@ export const questRouter = createTRPCRouter({
   deleteCampaign: gameMasterProcedure
     .input(
       z.object({
-        questId: z.string().cuid(),
+        questId: z.string(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -130,12 +129,17 @@ export const questRouter = createTRPCRouter({
   getQuests: protectedProcedure
     .input(z.object({ page: z.number().default(1) }))
     .query(async ({ ctx, input }) => {
-      return ctx.prisma.quest.findMany({
+      const quests = await ctx.prisma.quest.findMany({
+        include: {
+          activities: true,
+          campaign: true,
+        },
         where: {
           status: 1,
         },
         take: 10,
         skip: 10 * (input.page - 1),
       });
+      return quests.map((quest) => questMapper(quest));
     }),
 });
