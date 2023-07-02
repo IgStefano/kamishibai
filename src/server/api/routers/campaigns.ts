@@ -1,12 +1,11 @@
-import { createId } from "@paralleldrive/cuid2";
 import {
   createTRPCRouter,
   gameMasterProcedure,
   protectedProcedure,
 } from "../trpc";
 import { z } from "zod";
-import type { User } from "@prisma/client";
 import { campaignMapper } from "./mappers";
+import { TRPCError } from "@trpc/server";
 
 export const campaignRouter = createTRPCRouter({
   newCampaign: protectedProcedure
@@ -17,10 +16,8 @@ export const campaignRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const newCampaignId = createId();
       const newCampaign = await ctx.prisma.campaign.create({
         data: {
-          id: newCampaignId,
           gameMaster: ctx.session.user.id,
           image: input.campaignImage,
           name: input.campaignName,
@@ -34,7 +31,7 @@ export const campaignRouter = createTRPCRouter({
         data: {
           campaigns: {
             connect: {
-              id: newCampaignId,
+              id: newCampaign.id,
             },
           },
         },
@@ -103,7 +100,10 @@ export const campaignRouter = createTRPCRouter({
       });
 
       const mappedCampaigns = rawCampaigns.map((campaign) => {
-        return { ...campaign, gameMaster: (gameMaster as User)?.name };
+        return {
+          ...campaign,
+          gameMaster: gameMaster?.name ? gameMaster.name : "",
+        };
       });
 
       return mappedCampaigns.map((campaign) => campaignMapper(campaign));
@@ -122,6 +122,12 @@ export const campaignRouter = createTRPCRouter({
         take: 10,
         skip: 10 * (input.page - 1),
       });
+
+      if (!rawCampaign)
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "No campaigns matching the provided id were found",
+        });
 
       const gameMaster = await ctx.prisma.user.findFirst({
         where: {
