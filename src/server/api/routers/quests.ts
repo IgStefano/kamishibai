@@ -67,11 +67,11 @@ export const questRouter = createTRPCRouter({
       z.object({
         questId: z.string(),
         questName: z.string().min(5).max(64).optional(),
-        description: z.string().min(3).max(128).optional(),
+        description: z.string().min(3).max(1280).optional(),
         activities: z
           .array(
             z.object({
-              activityName: z.string().min(5).max(32),
+              activityName: z.string().min(5).max(64),
               activityStatus: z.enum([
                 "success",
                 "failure",
@@ -81,9 +81,18 @@ export const questRouter = createTRPCRouter({
             })
           )
           .min(1),
+        nextObjective: z.object({
+          activityName: z.string().min(5).max(64),
+          activityStatus: z.enum([
+            "success",
+            "failure",
+            "in_progress",
+            "not_started",
+          ]),
+        }),
         recommendedLevel: z.number().min(1).optional(),
         isVisible: z.boolean().optional(),
-        reward: z.string().min(3).max(32).optional(),
+        reward: z.string().min(3).max(64).optional(),
         campaignId: z.string().optional(),
       })
     )
@@ -138,7 +147,6 @@ export const questRouter = createTRPCRouter({
       const quests = await ctx.prisma.quest.findMany({
         include: {
           activities: true,
-          campaign: true,
         },
         where: {
           status: 1,
