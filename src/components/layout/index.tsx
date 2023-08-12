@@ -1,4 +1,3 @@
-import type { Dispatch, SetStateAction } from "react";
 import Header from "../header";
 
 interface LayoutProps {
@@ -8,6 +7,7 @@ interface LayoutProps {
   subHeading?: string;
   addIcon?: boolean;
   isLogged?: boolean;
+  mutation?: () => void;
 }
 
 export default function Layout({
@@ -17,6 +17,7 @@ export default function Layout({
   subHeading = "",
   addIcon = false,
   isLogged = false,
+  mutation = undefined,
 }: LayoutProps) {
   return (
     <section className={`w-full ${className}`}>
@@ -25,6 +26,7 @@ export default function Layout({
         subHeading={subHeading}
         addIcon={addIcon}
         isLogged={isLogged}
+        mutation={mutation}
       />
       {children}
     </section>

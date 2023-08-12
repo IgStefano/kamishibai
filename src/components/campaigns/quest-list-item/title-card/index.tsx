@@ -12,6 +12,7 @@ interface TitleCardProps {
   openQuests: string[];
   setOpenQuests: Dispatch<SetStateAction<string[]>>;
   editable: boolean;
+  mutation?: () => void;
 }
 
 export default function TitleCard({
@@ -22,8 +23,9 @@ export default function TitleCard({
   openQuests,
   setOpenQuests,
   editable,
+  mutation = undefined,
 }: TitleCardProps) {
-  const { setIsModalOpen } = useContext(ModalContext);
+  const { setIsModalOpen, setModalOptions } = useContext(ModalContext);
   const isOpen = openQuests.includes(id);
 
   const handleCloseQuest = () => {
@@ -60,11 +62,13 @@ export default function TitleCard({
         className="p-4"
         onClick={() => (isOpen ? handleCloseQuest() : handleOpenQuest())}
       >
-        {isOpen ? (
-          <Icon icon="ph:arrow-down" className="text-gray-50" />
-        ) : (
-          <Icon icon="ph:arrow-right" className="text-gray-50" />
-        )}
+        <Icon
+          icon="ph:arrow-down"
+          className={classnames(
+            "transform-all text-gray-50 duration-300",
+            isOpen ? "-rotate-90" : ""
+          )}
+        />
       </div>
 
       <div className="flex w-full flex-col justify-center gap-1">
@@ -72,10 +76,17 @@ export default function TitleCard({
         {getSubtitle()}
       </div>
 
-      {editable && (
+      {editable && mutation && (
         <div
           className="absolute top-2 right-2 cursor-pointer"
-          onClick={() => void setIsModalOpen(true)}
+          onClick={() => {
+            void setIsModalOpen(true);
+            setModalOptions({
+              module: "quest",
+              type: "edit",
+              mutation,
+            });
+          }}
         >
           <Icon icon="ph:pencil-simple" className=" text-gray-50" />
         </div>

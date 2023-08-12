@@ -1,10 +1,8 @@
-import Input from "@components/form/input";
 import type { IncomingMessage, ServerResponse } from "http";
 import { useContext } from "react";
 import CampaignListItem from "../../components/campaigns/campaign-list-item";
 import Divider from "../../components/divider";
 import Layout from "../../components/layout";
-import Modal from "../../components/layout/modal";
 import { getServerAuthSession } from "../../server/auth";
 import { dosis } from "../../styles/fonts";
 import { api } from "@utils/api";
@@ -15,7 +13,7 @@ export default function Campaigns() {
   const campaigns = api.campaign.getCampaigns.useQuery({}).data;
   const mutation = api.campaign.newCampaign.useMutation();
 
-  const handleCreateCampaign = () => {
+  const handleCampaignMutation = () => {
     const campaignName =
       (document.getElementById("campaignName") as HTMLInputElement)?.value ||
       "";
@@ -28,6 +26,7 @@ export default function Campaigns() {
       isLogged
       addIcon
       message="Abra uma nova campanha e crie as aventuras do seu grupo!"
+      mutation={handleCampaignMutation}
     >
       <Divider />
       <p className={`text-sm text-gray-500 ${dosis.className} mb-4 w-full`}>
@@ -40,17 +39,10 @@ export default function Campaigns() {
             id={campaign.id}
             master={campaign.gameMaster}
             title={campaign.name}
+            mutation={handleCampaignMutation}
           />
         ))}
       </section>
-      <Modal
-        buttonLabel="Criar Campanha"
-        content={
-          <Input label="Nome da campanha" name="campaignName" required />
-        }
-        title="Crie a sua campanha"
-        mutation={handleCreateCampaign}
-      />
     </Layout>
   );
 }

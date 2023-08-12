@@ -10,6 +10,7 @@ import localFont from "@next/font/local";
 import { notoSans } from "../styles/fonts";
 import { ModalProvider } from "../contexts/modal";
 import { QuestFormProvider } from "../contexts/questForm";
+import Modal from "@components/layout/modal";
 export const LTCarpet = localFont({
   src: "../../public/assets/fonts/LT Carpet/LTCarpet.ttf",
 });
@@ -33,6 +34,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
             <QuestFormProvider>
               <ModalProvider>
                 <Component {...pageProps} />
+                <Modal />
               </ModalProvider>
             </QuestFormProvider>
           </div>

@@ -13,6 +13,7 @@ interface HeaderProps {
   subHeading?: string;
   addIcon?: boolean;
   isLogged?: boolean;
+  mutation?: () => void;
 }
 
 export default function Header({
@@ -20,8 +21,9 @@ export default function Header({
   subHeading = "",
   addIcon = false,
   isLogged = false,
+  mutation = undefined,
 }: HeaderProps) {
-  const { setIsModalOpen } = useContext(ModalContext);
+  const { setIsModalOpen, setModalOptions } = useContext(ModalContext);
   return (
     <header className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
@@ -64,9 +66,17 @@ export default function Header({
           >
             {message}
           </h4>
-          {addIcon && setIsModalOpen && (
+          {addIcon && setIsModalOpen && mutation && (
             <Icon
-              onClick={() => setIsModalOpen(true)}
+              onClick={() => {
+                setIsModalOpen(true);
+                setModalOptions({
+                  module: "quest",
+                  type: "new",
+                  mutation,
+                });
+                console.log("oi");
+              }}
               style={{ clipPath: "circle(45%)" }}
               className="clip cursor-pointer rounded-full text-[32px] text-burgundy transition-colors duration-300 hover:bg-burgundy hover:text-gray-50"
               icon="ph:plus-circle"

@@ -1,19 +1,11 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import QuestListItem from "@components/campaigns/quest-list-item";
-import {
-  ActivitiesWrapper,
-  type ActivityClient,
-} from "@components/form/checkbox/checkbox-wrapper";
-import Input from "@components/form/input";
 import Layout from "@components/layout";
-import Modal from "@components/layout/modal";
 import type { IncomingMessage, ServerResponse } from "http";
 import { useContext, useState } from "react";
 import { getServerAuthSession } from "../../../server/auth";
-import { AnimatePresence, motion } from "framer-motion";
 import { api } from "@utils/api";
 import { useRouter } from "next/router";
-import TextArea from "@components/form/textarea";
 import { ModalContext } from "@/src/contexts/modal";
 import { QuestFormContext } from "@/src/contexts/questForm";
 
@@ -38,7 +30,6 @@ export default function CampaignQuests() {
   const mutation = api.quest.newQuest.useMutation();
 
   const [openQuests, setOpenQuests] = useState<string[]>([]);
-  const [formActivities, setFormActivities] = useState<ActivityClient[]>([]);
 
   const handleCreateQuest = () => {
     if (campaign) {
@@ -75,6 +66,7 @@ export default function CampaignQuests() {
       addIcon
       message="Crie agora uma aventura para esta campanha!"
       subHeading={campaign?.name || ""}
+      mutation={handleCreateQuest}
     >
       <ul className="my-4 flex list-none flex-col gap-4">
         {quests?.map((quest) => (
@@ -86,64 +78,6 @@ export default function CampaignQuests() {
           />
         ))}
       </ul>
-      <Modal
-        mutation={handleCreateQuest}
-        buttonLabel="Criar Aventura"
-        content={
-          <form id="new-quest" className="flex flex-col gap-4">
-            <Input
-              label="Nome da Aventura"
-              name="questName"
-              required
-              maxLength={64}
-            />
-            <Input
-              label="Data de Início"
-              name="startDate"
-              required
-              type="date"
-            />
-            <Input
-              label="Objetivo"
-              name="mainObjective"
-              required
-              maxLength={64}
-            />
-            <input
-              name="activities"
-              required
-              hidden
-              maxLength={64}
-              value={activities.join(",")}
-            />
-            <div id="activities">
-              <Input
-                label="Atividades"
-                name=""
-                addNew
-                placeholder="Adicionar mais uma atividade"
-                maxLength={64}
-                activities={formActivities}
-                setActivities={setFormActivities}
-              />
-              <AnimatePresence>
-                {formActivities.length > 0 && (
-                  <motion.div exit={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                    <ActivitiesWrapper
-                      activities={formActivities}
-                      setActivities={setFormActivities}
-                    />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-            <Input label="Recompensa" name="reward" maxLength={64} />
-            <Input label="Nível Recomendado" name="recommendedLevel" />
-            <TextArea label="Descrição" name="description" maxLength={1280} />
-          </form>
-        }
-        title="Crie a sua aventura"
-      />
     </Layout>
   );
 }

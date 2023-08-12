@@ -1,6 +1,8 @@
+import { ModalContext } from "@/src/contexts/modal";
 import { Icon } from "@iconify/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { useContext } from "react";
 
 interface CampaignListItemProps {
   id: string;
@@ -10,22 +12,25 @@ interface CampaignListItemProps {
     url: string;
     alt: string;
   };
+  mutation?: () => void;
 }
 
 export default function CampaignListItem({
   id,
   title,
   master,
-  image,
+  image = undefined,
+  mutation = undefined,
 }: CampaignListItemProps) {
   const router = useRouter();
+  const { setIsModalOpen, setModalOptions } = useContext(ModalContext);
 
   return (
-    <li
-      className="relative flex w-full gap-4 rounded-3xl bg-lightYellow py-1 px-4 drop-shadow-default"
-      onClick={() => void router.push(`/campaigns/${id}`)}
-    >
-      <div className={`h-8 w-8 rounded-full bg-gray-400`}>
+    <li className="relative flex w-full cursor-pointer gap-4 rounded-3xl bg-lightYellow py-1 px-4 drop-shadow-default">
+      <div
+        className={`h-8 w-8 rounded-full bg-gray-400`}
+        onClick={() => void router.push(`/campaigns/${id}`)}
+      >
         {image?.url && (
           <Image
             src={image.url}
@@ -36,16 +41,23 @@ export default function CampaignListItem({
           />
         )}
       </div>
-      <div className="flex w-full max-w-[70%] flex-col gap-1">
+      <div
+        className="flex w-full flex-col gap-1"
+        onClick={() => void router.push(`/campaigns/${id}`)}
+      >
         <p className="w-full overflow-hidden text-ellipsis whitespace-pre text-xs italic text-burgundy-500">
           {title}
         </p>
         <p className="text-[0.5rem] italic text-gray-600">{master}</p>
       </div>
-      {master && (
+      {master && mutation && (
         <Icon
+          onClick={() => {
+            setModalOptions({ module: "campaign", type: "edit", mutation });
+            setIsModalOpen(true);
+          }}
           icon="ph:pencil-simple"
-          className="absolute top-2 right-2 text-burgundy"
+          className="absolute top-2 right-2 z-10 cursor-pointer text-burgundy"
         />
       )}
     </li>

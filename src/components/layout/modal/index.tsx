@@ -2,26 +2,34 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import useOutsideClickRef from "@/src/hooks/useOutsideClickRef";
 import { LTCarpet } from "@pages/_app";
-import { useContext, type ReactNode } from "react";
+import { useContext } from "react";
 import { classnames } from "../../../utils/classnames";
 import Button from "../../button";
 import { ModalContext } from "@/src/contexts/modal";
+import CampaignModule from "./campaign-module";
+import QuestModule from "./quest-module";
 
-interface ModalProps {
-  title: string;
-  buttonLabel: string;
-  content: ReactNode | ReactNode[];
-  mutation: () => void;
-}
-
-export default function Modal({
-  buttonLabel,
-  content,
-  title,
-  mutation,
-}: ModalProps) {
-  const { isModalOpen, setIsModalOpen } = useContext(ModalContext);
+export default function Modal() {
+  const { isModalOpen, setIsModalOpen, modalOptions } =
+    useContext(ModalContext);
   const modalRef = useOutsideClickRef({ setIsOpen: setIsModalOpen });
+  const { module, type, mutation } = modalOptions;
+
+  const content = {
+    campaign: <CampaignModule />,
+    quest: <QuestModule type={type} />,
+  };
+
+  const label = {
+    new: {
+      button: `Criar ${module === "quest" ? "Aventura" : "Campanha"}`,
+      title: `Crie a sua ${module === "quest" ? "aventura" : "campanha"}`,
+    },
+    edit: {
+      button: `Editar ${module === "quest" ? "Aventura" : "Campanha"}`,
+      title: `Edite esta ${module === "quest" ? "aventura" : "campanha"}`,
+    },
+  };
 
   return (
     <section
@@ -42,10 +50,12 @@ export default function Modal({
             "mx-2 w-full text-center text-4xl uppercase text-gray-500"
           )}
         >
-          {title}
+          {label[type].title}
         </h3>
-        <div className="max-h-[60vh] w-full overflow-y-auto">{content}</div>
-        <Button label={buttonLabel} onClick={mutation} />
+        <div className="max-h-[60vh] w-full overflow-y-auto">
+          {content[module]}
+        </div>
+        <Button label={label[type].button} onClick={mutation} />
       </div>
     </section>
   );
