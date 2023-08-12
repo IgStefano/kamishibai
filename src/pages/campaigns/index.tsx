@@ -1,6 +1,6 @@
 import Input from "@components/form/input";
 import type { IncomingMessage, ServerResponse } from "http";
-import { useState } from "react";
+import { useContext } from "react";
 import CampaignListItem from "../../components/campaigns/campaign-list-item";
 import Divider from "../../components/divider";
 import Layout from "../../components/layout";
@@ -8,9 +8,10 @@ import Modal from "../../components/layout/modal";
 import { getServerAuthSession } from "../../server/auth";
 import { dosis } from "../../styles/fonts";
 import { api } from "@utils/api";
+import { ModalContext } from "@/src/contexts/modal";
 
 export default function Campaigns() {
-  const [isOpen, setIsOpen] = useState(false);
+  const { setIsModalOpen } = useContext(ModalContext);
   const campaigns = api.campaign.getCampaigns.useQuery({}).data;
   const mutation = api.campaign.newCampaign.useMutation();
 
@@ -19,8 +20,7 @@ export default function Campaigns() {
       (document.getElementById("campaignName") as HTMLInputElement)?.value ||
       "";
     mutation.mutate({ campaignName });
-
-    setIsOpen(false);
+    setIsModalOpen(false);
   };
 
   return (
@@ -28,7 +28,6 @@ export default function Campaigns() {
       isLogged
       addIcon
       message="Abra uma nova campanha e crie as aventuras do seu grupo!"
-      setIsModalOpen={setIsOpen}
     >
       <Divider />
       <p className={`text-sm text-gray-500 ${dosis.className} mb-4 w-full`}>
@@ -50,8 +49,6 @@ export default function Campaigns() {
           <Input label="Nome da campanha" name="campaignName" required />
         }
         title="Crie a sua campanha"
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
         mutation={handleCreateCampaign}
       />
     </Layout>

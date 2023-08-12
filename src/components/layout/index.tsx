@@ -8,7 +8,6 @@ interface LayoutProps {
   subHeading?: string;
   addIcon?: boolean;
   isLogged?: boolean;
-  setIsModalOpen?: Dispatch<SetStateAction<boolean>>;
 }
 
 export default function Layout({
@@ -18,7 +17,6 @@ export default function Layout({
   subHeading = "",
   addIcon = false,
   isLogged = false,
-  setIsModalOpen,
 }: LayoutProps) {
   return (
     <section className={`w-full ${className}`}>
@@ -27,7 +25,6 @@ export default function Layout({
         subHeading={subHeading}
         addIcon={addIcon}
         isLogged={isLogged}
-        setIsModalOpen={setIsModalOpen}
       />
       {children}
     </section>

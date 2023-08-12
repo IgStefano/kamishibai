@@ -3,16 +3,16 @@
 import { Icon } from "@iconify/react";
 import { LTCarpet } from "@pages/_app";
 import { signOut } from "next-auth/react";
-import type { Dispatch, SetStateAction } from "react";
+import { useContext } from "react";
 import { dosis } from "../../styles/fonts";
 import { classnames } from "../../utils/classnames";
+import { ModalContext } from "@/src/contexts/modal";
 
 interface HeaderProps {
   message?: string;
   subHeading?: string;
   addIcon?: boolean;
   isLogged?: boolean;
-  setIsModalOpen?: Dispatch<SetStateAction<boolean>>;
 }
 
 export default function Header({
@@ -20,8 +20,8 @@ export default function Header({
   subHeading = "",
   addIcon = false,
   isLogged = false,
-  setIsModalOpen,
 }: HeaderProps) {
+  const { setIsModalOpen } = useContext(ModalContext);
   return (
     <header className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
@@ -50,7 +50,7 @@ export default function Header({
             LTCarpet.className
           )}
         >
-          Hypernatural
+          {subHeading}
         </h2>
       )}
       {message && (

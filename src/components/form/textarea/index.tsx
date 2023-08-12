@@ -1,5 +1,6 @@
+import { QuestFormContext } from "@/src/contexts/questForm";
 import type { ComponentPropsWithoutRef } from "react";
-import { useState } from "react";
+import { useContext, useState } from "react";
 
 interface TextAreaProps extends ComponentPropsWithoutRef<"textarea"> {
   name: string;
@@ -18,6 +19,7 @@ export default function TextArea({
   ...rest
 }: TextAreaProps) {
   const [value, setValue] = useState("");
+  const { dispatch } = useContext(QuestFormContext);
 
   return (
     <div className="flex w-full flex-col">
@@ -31,6 +33,9 @@ export default function TextArea({
         disabled={disabled}
         required={required}
         onChange={(e) => setValue(e.target.value)}
+        onBlur={() =>
+          dispatch({ fieldName: name, payload: value, type: "field" })
+        }
         placeholder={placeholder}
         value={value}
       />

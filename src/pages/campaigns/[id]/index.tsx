@@ -1,19 +1,35 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import QuestListItem from "@components/campaigns/quest-list-item";
-import type { CheckboxT } from "@components/form/checkbox/checkbox-wrapper";
-import CheckboxWrapper from "@components/form/checkbox/checkbox-wrapper";
+import {
+  ActivitiesWrapper,
+  type ActivityClient,
+} from "@components/form/checkbox/checkbox-wrapper";
 import Input from "@components/form/input";
 import Layout from "@components/layout";
 import Modal from "@components/layout/modal";
 import type { IncomingMessage, ServerResponse } from "http";
-import { useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { getServerAuthSession } from "../../../server/auth";
 import { AnimatePresence, motion } from "framer-motion";
 import { api } from "@utils/api";
 import { useRouter } from "next/router";
 import TextArea from "@components/form/textarea";
+import { ModalContext } from "@/src/contexts/modal";
+import { QuestFormContext } from "@/src/contexts/questForm";
 
 export default function CampaignQuests() {
+  const { setIsModalOpen } = useContext(ModalContext);
+  const { state } = useContext(QuestFormContext);
+  const {
+    activities,
+    description,
+    mainObjective,
+    questName,
+    recommendedLevel,
+    reward,
+    startDate,
+  } = state;
+
   const router = useRouter();
   const campaign = api.campaign.getCampaignById.useQuery({
     id: router.query.id as string,
@@ -21,61 +37,44 @@ export default function CampaignQuests() {
   const quests = api.quest.getQuests.useQuery({}).data;
   const mutation = api.quest.newQuest.useMutation();
 
-  const [isOpen, setIsOpen] = useState(false);
   const [openQuests, setOpenQuests] = useState<string[]>([]);
-  const [activities, setActivities] = useState<string[]>([]);
-  const [checkboxes, setCheckboxes] = useState<CheckboxT[]>([]);
+  const [formActivities, setFormActivities] = useState<ActivityClient[]>([]);
 
   const handleCreateQuest = () => {
-    const formData = new FormData(
-      document.getElementById("new-quest") as HTMLFormElement
-    );
-
-    if (campaign)
-      mutation.mutate({
-        questName: formData.get("questName")!.toString(),
-        activities: formData
-          .get("activities")!
-          .toString()
-          .split(",")
-          .map((activity) => {
-            return { activityName: activity, activityStatus: "not_started" };
-          }),
-        nextObjective: {
-          activityName: formData.get("objective")!.toString(),
-          activityStatus: "in_progress",
-        },
+    if (campaign) {
+      const mutator = {
         campaignId: campaign.id,
-        description: formData.get("description")!.toString(),
+        questName,
+        mainObjective,
+        startDate: new Date(startDate),
+        activities,
         isVisible: true,
-        recommendedLevel: Number(formData.get("recommendedLevel")!.toString()),
-        reward: formData.get("reward")!.toString(),
+      };
+
+      const optionalFields = {
+        description,
+        recommendedLevel,
+        reward,
+      };
+
+      Object.entries(optionalFields).forEach((field) => {
+        if (field[1]) {
+          Object.assign(mutator, { [field[0]]: field[1] });
+        }
       });
 
-    setIsOpen(false);
-  };
+      mutation.mutate(mutator);
+    }
 
-  useEffect(() => {
-    setCheckboxes(
-      activities.map((activity) => {
-        return {
-          id: activity,
-          label: activity,
-          name: activity,
-          deletable: true,
-        };
-      })
-    );
-  }, [activities]);
+    setIsModalOpen(false);
+  };
 
   return (
     <Layout
       isLogged
       addIcon
       message="Crie agora uma aventura para esta campanha!"
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      subHeading={campaign?.name}
-      setIsModalOpen={setIsOpen}
+      subHeading={campaign?.name || ""}
     >
       <ul className="my-4 flex list-none flex-col gap-4">
         {quests?.map((quest) => (
@@ -105,8 +104,8 @@ export default function CampaignQuests() {
               type="date"
             />
             <Input
-              label="Próximo objetivo"
-              name="objective"
+              label="Objetivo"
+              name="mainObjective"
               required
               maxLength={64}
             />
@@ -124,16 +123,15 @@ export default function CampaignQuests() {
                 addNew
                 placeholder="Adicionar mais uma atividade"
                 maxLength={64}
-                activities={activities}
-                setActivities={setActivities}
+                activities={formActivities}
+                setActivities={setFormActivities}
               />
               <AnimatePresence>
-                {checkboxes.length > 0 && (
+                {formActivities.length > 0 && (
                   <motion.div exit={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                    <CheckboxWrapper
-                      label=""
-                      checkboxes={checkboxes}
-                      setCheckboxes={setActivities}
+                    <ActivitiesWrapper
+                      activities={formActivities}
+                      setActivities={setFormActivities}
                     />
                   </motion.div>
                 )}
@@ -145,8 +143,6 @@ export default function CampaignQuests() {
           </form>
         }
         title="Crie a sua aventura"
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
       />
     </Layout>
   );

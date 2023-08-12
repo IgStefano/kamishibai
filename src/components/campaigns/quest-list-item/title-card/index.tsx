@@ -1,7 +1,8 @@
+import { ModalContext } from "@/src/contexts/modal";
 import { notoSans } from "@/src/styles/fonts";
 import { Icon } from "@iconify/react";
 import { classnames } from "@utils/classnames";
-import type { Dispatch, SetStateAction } from "react";
+import { useContext, type Dispatch, type SetStateAction } from "react";
 
 interface TitleCardProps {
   id: string;
@@ -22,6 +23,7 @@ export default function TitleCard({
   setOpenQuests,
   editable,
 }: TitleCardProps) {
+  const { setIsModalOpen } = useContext(ModalContext);
   const isOpen = openQuests.includes(id);
 
   const handleCloseQuest = () => {
@@ -71,7 +73,10 @@ export default function TitleCard({
       </div>
 
       {editable && (
-        <div className="absolute top-2 right-2">
+        <div
+          className="absolute top-2 right-2 cursor-pointer"
+          onClick={() => void setIsModalOpen(true)}
+        >
           <Icon icon="ph:pencil-simple" className=" text-gray-50" />
         </div>
       )}

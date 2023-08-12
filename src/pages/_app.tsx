@@ -8,6 +8,8 @@ import "../styles/globals.css";
 import Head from "next/head";
 import localFont from "@next/font/local";
 import { notoSans } from "../styles/fonts";
+import { ModalProvider } from "../contexts/modal";
+import { QuestFormProvider } from "../contexts/questForm";
 export const LTCarpet = localFont({
   src: "../../public/assets/fonts/LT Carpet/LTCarpet.ttf",
 });
@@ -28,7 +30,11 @@ const MyApp: AppType<{ session: Session | null }> = ({
           <div
             className={`flex w-full max-w-4xl flex-col items-center justify-center gap-4 px-6 pt-8 ${notoSans.className} font-sans`}
           >
-            <Component {...pageProps} />
+            <QuestFormProvider>
+              <ModalProvider>
+                <Component {...pageProps} />
+              </ModalProvider>
+            </QuestFormProvider>
           </div>
         </div>
       </main>

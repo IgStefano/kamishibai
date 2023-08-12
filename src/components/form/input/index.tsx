@@ -1,7 +1,9 @@
 import { Icon } from "@iconify/react";
 import { classnames } from "@utils/classnames";
 import type { ComponentPropsWithoutRef, Dispatch, SetStateAction } from "react";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import type { ActivityClient } from "../checkbox/checkbox-wrapper";
+import { QuestFormContext } from "@/src/contexts/questForm";
 
 interface InputProps extends ComponentPropsWithoutRef<"input"> {
   name: string;
@@ -11,8 +13,8 @@ interface InputProps extends ComponentPropsWithoutRef<"input"> {
   addNew?: boolean;
   placeholder?: string;
   hidden?: boolean;
-  activities?: string[];
-  setActivities?: Dispatch<SetStateAction<string[]>>;
+  activities?: ActivityClient[];
+  setActivities?: Dispatch<SetStateAction<ActivityClient[]>>;
 }
 
 export default function Input({
@@ -30,10 +32,15 @@ export default function Input({
   const [value, setValue] = useState("");
   const handleAddActivity = () => {
     if (setActivities && activities) {
-      setActivities([...activities, value]);
+      setActivities([
+        ...activities,
+        { activityName: value, activityStatus: "not_started" },
+      ]);
       setValue("");
     }
   };
+
+  const { dispatch } = useContext(QuestFormContext);
 
   return (
     <div className={classnames(hidden ? "hidden" : "flex w-full flex-col")}>
@@ -49,6 +56,9 @@ export default function Input({
           id={name}
           onChange={(e) => setValue(e.target.value)}
           value={value}
+          onBlur={() =>
+            dispatch({ fieldName: name, payload: value, type: "field" })
+          }
           placeholder={placeholder}
           onKeyDown={(e) => {
             e.key === "Enter" && addNew && handleAddActivity();

@@ -2,16 +2,15 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import useOutsideClickRef from "@/src/hooks/useOutsideClickRef";
 import { LTCarpet } from "@pages/_app";
-import type { Dispatch, ReactNode, SetStateAction } from "react";
+import { useContext, type ReactNode } from "react";
 import { classnames } from "../../../utils/classnames";
 import Button from "../../button";
+import { ModalContext } from "@/src/contexts/modal";
 
 interface ModalProps {
   title: string;
   buttonLabel: string;
   content: ReactNode | ReactNode[];
-  isOpen: boolean;
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
   mutation: () => void;
 }
 
@@ -19,18 +18,17 @@ export default function Modal({
   buttonLabel,
   content,
   title,
-  isOpen,
-  setIsOpen,
   mutation,
 }: ModalProps) {
-  const modalRef = useOutsideClickRef({ setIsOpen: setIsOpen });
+  const { isModalOpen, setIsModalOpen } = useContext(ModalContext);
+  const modalRef = useOutsideClickRef({ setIsOpen: setIsModalOpen });
 
   return (
     <section
       role="dialog"
       className={classnames(
         "absolute top-0 right-0 flex h-full w-full items-center justify-center bg-[#000] bg-opacity-80 transition-all duration-300",
-        !isOpen ? "pointer-events-none opacity-0" : ""
+        !isModalOpen ? "pointer-events-none opacity-0" : ""
       )}
     >
       <div
