@@ -13,12 +13,8 @@ export const questRouter = createTRPCRouter({
       z.object({
         questName: z.string().min(5).max(64),
         description: z.string().min(3).max(1280).optional(),
-        nextObjective: z.object({
-          activityName: z.string().min(5).max(64),
-          activityStatus: z
-            .enum(["success", "failure", "in_progress", "not_started"])
-            .default("in_progress"),
-        }),
+        mainObjective: z.string().min(5).max(64),
+        startDate: z.date(),
         activities: z
           .array(
             z.object({
@@ -53,10 +49,11 @@ export const questRouter = createTRPCRouter({
               }),
             },
           },
+          startDate: input.startDate,
           isVisible: input.isVisible || true,
           reward: input.reward,
           recommendedLevel: input.recommendedLevel,
-          nextObjective: input.nextObjective.activityName,
+          mainObjective: input.mainObjective,
           campaignId: input.campaignId,
         },
       });
@@ -81,15 +78,8 @@ export const questRouter = createTRPCRouter({
             })
           )
           .min(1),
-        nextObjective: z.object({
-          activityName: z.string().min(5).max(64),
-          activityStatus: z.enum([
-            "success",
-            "failure",
-            "in_progress",
-            "not_started",
-          ]),
-        }),
+        mainObjective: z.string().min(5).max(64),
+        startDate: z.date(),
         recommendedLevel: z.number().min(1).optional(),
         isVisible: z.boolean().optional(),
         reward: z.string().min(3).max(64).optional(),
@@ -115,10 +105,11 @@ export const questRouter = createTRPCRouter({
               skipDuplicates: true,
             },
           },
+          startDate: input.startDate,
           isVisible: input.isVisible,
           reward: input.reward,
           recommendedLevel: input.recommendedLevel,
-          nextObjective: input.activities[0]?.activityName,
+          mainObjective: input.mainObjective,
           campaignId: input.campaignId,
         },
       });

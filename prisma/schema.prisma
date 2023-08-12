@@ -69,8 +69,9 @@ model Quest {
     name             String
     description      String?
     createdAt        DateTime   @default(now())
+    startDate        DateTime
     recommendedLevel Int?
-    nextObjective    String?
+    mainObjective    String
     activities       Activity[]
     isVisible        Boolean    @default(true)
     reward           String?

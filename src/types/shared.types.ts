@@ -27,7 +27,7 @@ const Quest = z.object({
   description: z.string().optional(),
   createdAt: z.date(),
   recommendedLevel: z.number().optional(),
-  nextObjective: z.string().optional(),
+  mainObjective: z.string(),
   isVisible: z.boolean(),
   reward: z.string().optional(),
   campaignId: z.string().cuid(),
