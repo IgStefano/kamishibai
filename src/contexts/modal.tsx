@@ -1,10 +1,15 @@
 import type { Dispatch, ReactNode, SetStateAction } from "react";
 import { createContext, useState } from "react";
+import type { Campaign, Quest } from "../types/shared.types";
 
 type ModalOptions = {
   module: "campaign" | "quest";
   type: "new" | "edit";
   mutation: () => void;
+  populate?: {
+    campaign?: { name: Campaign["name"] };
+    quest?: Quest;
+  };
 };
 
 interface ModalContextProps {
@@ -17,7 +22,12 @@ interface ModalContextProps {
 export const ModalContext = createContext<ModalContextProps>({
   isModalOpen: false,
   setIsModalOpen: () => null,
-  modalOptions: { module: "campaign", type: "new", mutation: () => null },
+  modalOptions: {
+    module: "campaign",
+    type: "new",
+    mutation: () => null,
+    populate: undefined,
+  },
   setModalOptions: () => null,
 });
 
@@ -31,6 +41,7 @@ export function ModalProvider({
     module: "campaign",
     type: "new",
     mutation: () => null,
+    populate: undefined,
   });
 
   return (

@@ -15,6 +15,7 @@ interface InputProps extends ComponentPropsWithoutRef<"input"> {
   hidden?: boolean;
   activities?: ActivityClient[];
   setActivities?: Dispatch<SetStateAction<ActivityClient[]>>;
+  setPopulate?: Dispatch<SetStateAction<string>>;
 }
 
 export default function Input({
@@ -27,6 +28,7 @@ export default function Input({
   hidden = false,
   activities,
   setActivities,
+  setPopulate,
   ...rest
 }: InputProps) {
   const [value, setValue] = useState("");
@@ -54,7 +56,10 @@ export default function Input({
           required={required && !addNew}
           name={name}
           id={name}
-          onChange={(e) => setValue(e.target.value)}
+          onChange={(e) => {
+            setValue(e.target.value);
+            setPopulate && setPopulate(e.target.value);
+          }}
           value={value}
           onBlur={() =>
             dispatch({ fieldName: name, payload: value, type: "field" })

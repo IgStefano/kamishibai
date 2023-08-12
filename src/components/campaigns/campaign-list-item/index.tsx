@@ -1,5 +1,6 @@
 import { ModalContext } from "@/src/contexts/modal";
 import { Icon } from "@iconify/react";
+import { api } from "@utils/api";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useContext } from "react";
@@ -12,7 +13,6 @@ interface CampaignListItemProps {
     url: string;
     alt: string;
   };
-  mutation?: () => void;
 }
 
 export default function CampaignListItem({
@@ -20,10 +20,23 @@ export default function CampaignListItem({
   title,
   master,
   image = undefined,
-  mutation = undefined,
 }: CampaignListItemProps) {
   const router = useRouter();
   const { setIsModalOpen, setModalOptions } = useContext(ModalContext);
+  const campaign = api.campaign.getCampaignById.useQuery({ id }).data;
+  const mutation = api.campaign.editCampaign.useMutation();
+
+  const handleEditCampaign = () => {
+    if (campaign)
+      mutation.mutate({
+        campaignId: campaign.id,
+        campaignName:
+          (document.getElementById("campaignName") as HTMLInputElement)
+            ?.value || title,
+        gameMaster: campaign.gameMaster,
+      });
+    setIsModalOpen(false);
+  };
 
   return (
     <li className="relative flex w-full cursor-pointer gap-4 rounded-3xl bg-lightYellow py-1 px-4 drop-shadow-default">
@@ -50,10 +63,15 @@ export default function CampaignListItem({
         </p>
         <p className="text-[0.5rem] italic text-gray-600">{master}</p>
       </div>
-      {master && mutation && (
+      {master && (
         <Icon
           onClick={() => {
-            setModalOptions({ module: "campaign", type: "edit", mutation });
+            setModalOptions({
+              module: "campaign",
+              type: "edit",
+              mutation: handleEditCampaign,
+              populate: { campaign: { name: title } },
+            });
             setIsModalOpen(true);
           }}
           icon="ph:pencil-simple"

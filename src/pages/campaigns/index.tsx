@@ -13,7 +13,7 @@ export default function Campaigns() {
   const campaigns = api.campaign.getCampaigns.useQuery({}).data;
   const mutation = api.campaign.newCampaign.useMutation();
 
-  const handleCampaignMutation = () => {
+  const handleCreateCampaign = () => {
     const campaignName =
       (document.getElementById("campaignName") as HTMLInputElement)?.value ||
       "";
@@ -26,7 +26,7 @@ export default function Campaigns() {
       isLogged
       addIcon
       message="Abra uma nova campanha e crie as aventuras do seu grupo!"
-      mutation={handleCampaignMutation}
+      mutation={handleCreateCampaign}
     >
       <Divider />
       <p className={`text-sm text-gray-500 ${dosis.className} mb-4 w-full`}>
@@ -39,7 +39,6 @@ export default function Campaigns() {
             id={campaign.id}
             master={campaign.gameMaster}
             title={campaign.name}
-            mutation={handleCampaignMutation}
           />
         ))}
       </section>

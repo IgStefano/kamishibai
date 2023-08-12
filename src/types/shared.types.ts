@@ -25,6 +25,7 @@ const Quest = z.object({
   id: z.string().cuid(),
   name: z.string(),
   description: z.string().optional(),
+  startDate: z.date(),
   createdAt: z.date(),
   recommendedLevel: z.number().optional(),
   mainObjective: z.string(),

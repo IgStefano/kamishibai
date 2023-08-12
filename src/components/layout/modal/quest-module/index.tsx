@@ -3,14 +3,30 @@ import { AnimatePresence, motion } from "framer-motion";
 import type { ActivityClient } from "@components/form/checkbox/checkbox-wrapper";
 import { ActivitiesWrapper } from "@components/form/checkbox/checkbox-wrapper";
 import TextArea from "@components/form/textarea";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { ActivityStatus } from "@/src/types/shared.types";
+import type { Quest } from "@/src/types/shared.types";
+import { ModalContext } from "@/src/contexts/modal";
 
 interface QuestModalProps {
   type: "new" | "edit";
+  populate?: Quest;
 }
 
 export default function QuestModule({ type }: QuestModalProps) {
-  const [formActivities, setFormActivities] = useState<ActivityClient[]>([]);
+  const { modalOptions } = useContext(ModalContext);
+  const { populate } = modalOptions;
+
+  const [formActivities, setFormActivities] = useState<ActivityClient[]>(
+    populate?.quest?.activities.map((activity) => {
+      return {
+        activityName: activity.name,
+        activityStatus: ActivityStatus[
+          activity.status
+        ] as keyof typeof ActivityStatus,
+      };
+    }) || []
+  );
 
   const id = `${type}-quest`;
 
@@ -21,9 +37,22 @@ export default function QuestModule({ type }: QuestModalProps) {
         name="questName"
         required
         maxLength={64}
+        value={populate?.quest?.name}
       />
-      <Input label="Data de Início" name="startDate" required type="date" />
-      <Input label="Objetivo" name="mainObjective" required maxLength={64} />
+      <Input
+        label="Data de Início"
+        name="startDate"
+        required
+        type="date"
+        value={populate?.quest?.startDate.toString()}
+      />
+      <Input
+        label="Objetivo"
+        name="mainObjective"
+        required
+        maxLength={64}
+        value={populate?.quest?.mainObjective}
+      />
       <div id="activities">
         <Input
           label="Atividades"
@@ -45,9 +74,23 @@ export default function QuestModule({ type }: QuestModalProps) {
           )}
         </AnimatePresence>
       </div>
-      <Input label="Recompensa" name="reward" maxLength={64} />
-      <Input label="Nível Recomendado" name="recommendedLevel" />
-      <TextArea label="Descrição" name="description" maxLength={1280} />
+      <Input
+        label="Recompensa"
+        name="reward"
+        maxLength={64}
+        value={populate?.quest?.reward}
+      />
+      <Input
+        label="Nível Recomendado"
+        name="recommendedLevel"
+        value={populate?.quest?.recommendedLevel?.toString()}
+      />
+      <TextArea
+        label="Descrição"
+        name="description"
+        maxLength={1280}
+        value={populate?.quest?.description}
+      />
     </form>
   );
 }
