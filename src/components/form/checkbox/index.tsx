@@ -2,7 +2,7 @@ import { Icon } from "@iconify/react";
 import { classnames } from "@utils/classnames";
 import { useState } from "react";
 import type { CheckboxT } from "./checkbox-wrapper";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 export default function Checkbox({
   id,
@@ -18,11 +18,6 @@ export default function Checkbox({
   const [isChecked, setIsChecked] = useState(checked);
   const [isDisabled, setIsDisabled] = useState(disabled);
   const [currentLabel, setCurrentLabel] = useState(label);
-
-  const [data, setData] = useState({
-    label,
-    isChecked,
-  });
 
   return (
     <motion.li
@@ -44,7 +39,7 @@ export default function Checkbox({
           onChange={() => !isDisabled && setIsChecked(!isChecked)}
           className={classnames(
             // prettier-ignore
-            "h-3 w-3 appearance-none bg-lightYellow-300 outline-none checked:relative checked:before:absolute checked:before:right-[1px] checked:before:top-[-5px] checked:before:text-sm checked:before:text-burgundy-700 checked:before:content-['\2713'] checked:before:bg-burgundy-900 ",
+            "h-3 w-3 appearance-none bg-lightYellow-300 outline-none checked:relative checked:before:absolute checked:before:right-[1px] checked:before:top-[-5px] checked:before:text-sm checked:before:text-burgundy-700 checked:before:content-['\xb92713'] checked:before:bg-burgundy-900 ",
             !isDisabled ? "cursor-pointer" : ""
           )}
           type="checkbox"

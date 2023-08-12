@@ -1,6 +1,8 @@
 import type { Dispatch, SetStateAction } from "react";
 import Checkbox from "..";
 import { AnimatePresence } from "framer-motion";
+import type { ActivityStatus } from "@/src/types/shared.types";
+import Activity from "@components/form/activity";
 
 export type CheckboxT = {
   id: string;
@@ -14,6 +16,11 @@ export type CheckboxT = {
   setCheckboxes?: Dispatch<SetStateAction<string[]>>;
 };
 
+export type ActivityClient = {
+  activityName: string;
+  activityStatus: keyof typeof ActivityStatus;
+};
+
 interface CheckboxWrapperProps {
   checkboxes: CheckboxT[];
   label?: string;
@@ -21,7 +28,12 @@ interface CheckboxWrapperProps {
   setCheckboxes?: Dispatch<SetStateAction<string[]>>;
 }
 
-export default function CheckboxWrapper({
+interface ActivitiesWrapperProps {
+  activities: ActivityClient[];
+  setActivities: Dispatch<SetStateAction<ActivityClient[]>>;
+}
+
+export function CheckboxWrapper({
   checkboxes,
   label = "",
   required = false,
@@ -51,5 +63,28 @@ export default function CheckboxWrapper({
         </AnimatePresence>
       </ul>
     </div>
+  );
+}
+
+export function ActivitiesWrapper({
+  activities,
+  setActivities,
+}: ActivitiesWrapperProps) {
+  return (
+    <ul className="mt-2 flex flex-col gap-2">
+      <AnimatePresence>
+        {activities.map((activity) => (
+          <Activity
+            id={activity.activityName}
+            key={activity.activityName}
+            activityName={activity.activityName}
+            activityStatus={activity.activityStatus}
+            activities={activities}
+            setActivities={setActivities}
+            deletable
+          />
+        ))}
+      </AnimatePresence>
+    </ul>
   );
 }
