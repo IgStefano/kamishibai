@@ -17,8 +17,10 @@ export type CheckboxT = {
 };
 
 export type ActivityClient = {
+  id?: string;
   activityName: string;
   activityStatus: keyof typeof ActivityStatus;
+  questId?: string;
 };
 
 interface CheckboxWrapperProps {

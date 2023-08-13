@@ -1,8 +1,7 @@
-import { type Dispatch, type SetStateAction, useContext } from "react";
+import { type Dispatch, type SetStateAction, useContext, useRef } from "react";
 import Description from "./description";
 import TitleCard from "./title-card";
 import type { Quest } from "@/src/types/shared.types";
-import { ActivityStatus } from "@/src/types/shared.types";
 import { useRouter } from "next/router";
 import { api } from "@utils/api";
 import { ModalContext } from "@/src/contexts/modal";
@@ -22,15 +21,8 @@ export default function QuestListItem({
   const { setIsModalOpen } = useContext(ModalContext);
 
   const { state } = useContext(QuestFormContext);
-  const {
-    activities,
-    description,
-    mainObjective,
-    questName,
-    recommendedLevel,
-    reward,
-    startDate,
-  } = state;
+  const stateRef = useRef(state);
+  stateRef.current = state;
 
   const router = useRouter();
   const campaign = api.campaign.getCampaignById.useQuery({
@@ -39,6 +31,16 @@ export default function QuestListItem({
   const mutation = api.quest.editQuest.useMutation();
 
   const handleEditQuest = () => {
+    const {
+      activities,
+      description,
+      mainObjective,
+      questName,
+      recommendedLevel,
+      reward,
+      startDate,
+    } = stateRef.current;
+
     if (campaign) {
       const mutator = {
         questId: quest.id,
@@ -52,7 +54,7 @@ export default function QuestListItem({
 
       const optionalFields = {
         description,
-        recommendedLevel,
+        recommendedLevel: Number(recommendedLevel),
         reward,
       };
 

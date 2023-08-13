@@ -15,7 +15,6 @@ interface InputProps extends ComponentPropsWithoutRef<"input"> {
   hidden?: boolean;
   activities?: ActivityClient[];
   setActivities?: Dispatch<SetStateAction<ActivityClient[]>>;
-  setPopulate?: Dispatch<SetStateAction<string>>;
 }
 
 export default function Input({
@@ -28,21 +27,28 @@ export default function Input({
   hidden = false,
   activities,
   setActivities,
-  setPopulate,
   ...rest
 }: InputProps) {
-  const [value, setValue] = useState("");
+  const { dispatch, state } = useContext(QuestFormContext);
+
+  const fieldName = (Object.keys(state) as (keyof typeof state)[]).find(
+    (key) => key === name
+  );
+  const [value, setValue] = useState(
+    fieldName && typeof state[fieldName] === "string" ? state[fieldName] : ""
+  );
   const handleAddActivity = () => {
     if (setActivities && activities) {
       setActivities([
         ...activities,
-        { activityName: value, activityStatus: "not_started" },
+        {
+          activityName: typeof value === "string" ? value : "",
+          activityStatus: "not_started",
+        },
       ]);
       setValue("");
     }
   };
-
-  const { dispatch } = useContext(QuestFormContext);
 
   return (
     <div className={classnames(hidden ? "hidden" : "flex w-full flex-col")}>
@@ -58,11 +64,16 @@ export default function Input({
           id={name}
           onChange={(e) => {
             setValue(e.target.value);
-            setPopulate && setPopulate(e.target.value);
+            dispatch({
+              fieldName: name,
+              payload: e.target.value,
+              type: "field",
+            });
           }}
-          value={value}
-          onBlur={() =>
-            dispatch({ fieldName: name, payload: value, type: "field" })
+          value={
+            fieldName === "startDate"
+              ? state["startDate"]?.toISOString().substring(0, 10)
+              : state[fieldName]
           }
           placeholder={placeholder}
           onKeyDown={(e) => {

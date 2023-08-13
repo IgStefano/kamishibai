@@ -75,7 +75,6 @@ export default function Header({
                   type: "new",
                   mutation,
                 });
-                console.log("oi");
               }}
               style={{ clipPath: "circle(45%)" }}
               className="clip cursor-pointer rounded-full text-[32px] text-burgundy transition-colors duration-300 hover:bg-burgundy hover:text-gray-50"

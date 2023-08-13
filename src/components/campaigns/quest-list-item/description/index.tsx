@@ -16,7 +16,6 @@ interface DescriptionProps {
 }
 
 export default function Description({ quest, openQuests }: DescriptionProps) {
-  console.log(quest);
   const { id, activities, recommendedLevel, reward, description, startDate } =
     quest;
 
@@ -59,7 +58,6 @@ export default function Description({ quest, openQuests }: DescriptionProps) {
 
   return (
     <div
-      onAnimationEnd={(e) => console.log(e.currentTarget)}
       className={classnames(
         "flex flex-col gap-4 overflow-hidden transition-all duration-500",
         !isOpen ? "pointer-events-none max-h-0 opacity-0" : "mt-4 max-h-screen"

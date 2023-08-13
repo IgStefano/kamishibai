@@ -68,6 +68,7 @@ export const questRouter = createTRPCRouter({
         activities: z
           .array(
             z.object({
+              id: z.string().optional(),
               activityName: z.string().min(5).max(64),
               activityStatus: z.enum([
                 "success",
@@ -75,6 +76,7 @@ export const questRouter = createTRPCRouter({
                 "in_progress",
                 "not_started",
               ]),
+              questId: z.string().optional(),
             })
           )
           .min(1),
@@ -87,6 +89,19 @@ export const questRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.$transaction(
+        input.activities.map((activity) => {
+          console.log(activity);
+          return ctx.prisma?.activity.update({
+            where: { id: activity.id },
+            data: {
+              name: activity.activityName,
+              status: ActivityStatus[activity.activityStatus],
+            },
+          });
+        })
+      );
+
       return ctx.prisma.quest.update({
         where: {
           id: input.questId,
@@ -98,6 +113,7 @@ export const questRouter = createTRPCRouter({
             createMany: {
               data: input.activities.map((activity) => {
                 return {
+                  id: activity.id,
                   name: activity.activityName,
                   status: ActivityStatus[activity.activityStatus],
                 };

@@ -12,6 +12,7 @@ import {
 import useOutsideClickRef from "@/src/hooks/useOutsideClickRef";
 import Option, { optionStatus } from "./option";
 import { QuestFormContext } from "@/src/contexts/questForm";
+import type { ActivityStatus } from "@/src/types/shared.types";
 
 interface ActivityProps extends ActivityClient {
   id: string;
@@ -32,10 +33,11 @@ export default function Activity({
 }: ActivityProps) {
   const [isOpen, setIsOpen] = useState(false);
   const selectRef = useOutsideClickRef({ setIsOpen });
-  const [currentActivity, setCurrentActivity] = useState<{
-    activityName: string;
-    activityStatus: typeof activityStatus | "";
-  }>({
+  const [currentActivity, setCurrentActivity] = useState<
+    Omit<ActivityClient, "activityStatus"> & {
+      activityStatus: keyof typeof ActivityStatus | "";
+    }
+  >({
     activityName,
     activityStatus: editMode ? activityStatus : "",
   });
@@ -54,6 +56,12 @@ export default function Activity({
         return activity;
       })
     );
+    dispatch({
+      fieldName: "activities",
+      payload: activities,
+      type: "field",
+    });
+    console.log(activities);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentActivity]);
 
@@ -109,7 +117,7 @@ export default function Activity({
           <Option
             onClick={() => {
               setCurrentActivity({
-                activityName,
+                ...currentActivity,
                 activityStatus: "not_started",
               });
               dispatch({
@@ -124,7 +132,7 @@ export default function Activity({
           <Option
             onClick={() => {
               setCurrentActivity({
-                activityName,
+                ...currentActivity,
                 activityStatus: "in_progress",
               });
               dispatch({
@@ -138,7 +146,10 @@ export default function Activity({
           />
           <Option
             onClick={() => {
-              setCurrentActivity({ activityName, activityStatus: "success" });
+              setCurrentActivity({
+                ...currentActivity,
+                activityStatus: "success",
+              });
               dispatch({
                 fieldName: "activities",
                 payload: activities,
@@ -150,7 +161,10 @@ export default function Activity({
           />
           <Option
             onClick={() => {
-              setCurrentActivity({ activityName, activityStatus: "failure" });
+              setCurrentActivity({
+                ...currentActivity,
+                activityStatus: "failure",
+              });
               dispatch({
                 fieldName: "activities",
                 payload: activities,
