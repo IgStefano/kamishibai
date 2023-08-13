@@ -31,6 +31,7 @@ interface CheckboxWrapperProps {
 interface ActivitiesWrapperProps {
   activities: ActivityClient[];
   setActivities: Dispatch<SetStateAction<ActivityClient[]>>;
+  editMode?: boolean;
 }
 
 export function CheckboxWrapper({
@@ -69,6 +70,7 @@ export function CheckboxWrapper({
 export function ActivitiesWrapper({
   activities,
   setActivities,
+  editMode = false,
 }: ActivitiesWrapperProps) {
   return (
     <ul className="mt-2 flex flex-col gap-2">
@@ -82,6 +84,7 @@ export function ActivitiesWrapper({
             activities={activities}
             setActivities={setActivities}
             deletable
+            editMode={editMode}
           />
         ))}
       </AnimatePresence>

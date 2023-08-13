@@ -71,30 +71,13 @@ export default function QuestListItem({
     <>
       <li>
         <TitleCard
-          id={quest.id}
+          quest={quest}
           setOpenQuests={setOpenQuests}
           openQuests={openQuests}
           editable
-          title={quest.name}
-          description={quest.description}
           mutation={handleEditQuest}
         />
-        <Description
-          description={quest.description}
-          objectives={quest.activities.map((activity) => {
-            return {
-              name: activity.name,
-              state: ActivityStatus[
-                activity.status
-              ] as keyof typeof ActivityStatus,
-            };
-          })}
-          id={quest.id}
-          openQuests={openQuests}
-          reward={quest.reward}
-          startDate={quest.createdAt}
-          title={quest.name}
-        />
+        <Description quest={quest} openQuests={openQuests} />
       </li>
     </>
   );

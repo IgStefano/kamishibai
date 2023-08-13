@@ -44,6 +44,7 @@ export const questMapper = (quest: QuestAPIResponse) => {
     id: quest.id,
     campaignId: quest.campaignId,
     name: quest.name,
+    startDate: quest.startDate,
     isVisible: quest.isVisible,
     createdAt: quest.createdAt,
     status: quest.status,

@@ -1,14 +1,12 @@
 import { ModalContext } from "@/src/contexts/modal";
 import { notoSans } from "@/src/styles/fonts";
+import type { Quest } from "@/src/types/shared.types";
 import { Icon } from "@iconify/react";
 import { classnames } from "@utils/classnames";
 import { useContext, type Dispatch, type SetStateAction } from "react";
 
 interface TitleCardProps {
-  id: string;
-  title: string;
-  level?: string | number;
-  description?: string;
+  quest: Quest;
   openQuests: string[];
   setOpenQuests: Dispatch<SetStateAction<string[]>>;
   editable: boolean;
@@ -16,16 +14,14 @@ interface TitleCardProps {
 }
 
 export default function TitleCard({
-  id,
-  title,
-  level,
-  description,
+  quest,
   openQuests,
   setOpenQuests,
   editable,
   mutation = undefined,
 }: TitleCardProps) {
   const { setIsModalOpen, setModalOptions } = useContext(ModalContext);
+  const { id, recommendedLevel, description, name } = quest;
   const isOpen = openQuests.includes(id);
 
   const handleCloseQuest = () => {
@@ -36,10 +32,11 @@ export default function TitleCard({
   };
 
   const getSubtitle = () => {
-    if (level)
+    if (recommendedLevel)
       return (
         <p className="text-[8px] italic text-gray-50">
-          <span className="not-italic">Nível recomendado:</span> {level}
+          <span className="not-italic">Nível recomendado:</span>{" "}
+          {recommendedLevel}
         </p>
       );
     if (description)
@@ -72,7 +69,7 @@ export default function TitleCard({
       </div>
 
       <div className="flex w-full flex-col justify-center gap-1">
-        <h5 className={classnames("text-xs italic text-gray-50")}>{title}</h5>
+        <h5 className={classnames("text-xs italic text-gray-50")}>{name}</h5>
         {getSubtitle()}
       </div>
 
@@ -85,6 +82,7 @@ export default function TitleCard({
               module: "quest",
               type: "edit",
               mutation,
+              populate: { quest: { ...quest } },
             });
           }}
         >

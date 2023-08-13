@@ -4,7 +4,7 @@ import type { ActivityClient } from "@components/form/checkbox/checkbox-wrapper"
 import { ActivitiesWrapper } from "@components/form/checkbox/checkbox-wrapper";
 import TextArea from "@components/form/textarea";
 import { useContext, useState } from "react";
-import { ActivityStatus } from "@/src/types/shared.types";
+import { getActivityStatus } from "@/src/types/shared.types";
 import type { Quest } from "@/src/types/shared.types";
 import { ModalContext } from "@/src/contexts/modal";
 
@@ -21,9 +21,7 @@ export default function QuestModule({ type }: QuestModalProps) {
     populate?.quest?.activities.map((activity) => {
       return {
         activityName: activity.name,
-        activityStatus: ActivityStatus[
-          activity.status
-        ] as keyof typeof ActivityStatus,
+        activityStatus: getActivityStatus(activity.status),
       };
     }) || []
   );
@@ -44,7 +42,7 @@ export default function QuestModule({ type }: QuestModalProps) {
         name="startDate"
         required
         type="date"
-        value={populate?.quest?.startDate.toString()}
+        value={populate?.quest?.startDate?.toISOString().substring(0, 10)}
       />
       <Input
         label="Objetivo"
@@ -69,6 +67,7 @@ export default function QuestModule({ type }: QuestModalProps) {
               <ActivitiesWrapper
                 activities={formActivities}
                 setActivities={setFormActivities}
+                editMode
               />
             </motion.div>
           )}

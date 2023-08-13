@@ -18,6 +18,7 @@ interface ActivityProps extends ActivityClient {
   activities: ActivityClient[];
   setActivities: Dispatch<SetStateAction<ActivityClient[]>>;
   deletable?: boolean;
+  editMode?: boolean;
 }
 
 export default function Activity({
@@ -27,6 +28,7 @@ export default function Activity({
   activities,
   setActivities,
   deletable = false,
+  editMode = false,
 }: ActivityProps) {
   const [isOpen, setIsOpen] = useState(false);
   const selectRef = useOutsideClickRef({ setIsOpen });
@@ -35,7 +37,7 @@ export default function Activity({
     activityStatus: typeof activityStatus | "";
   }>({
     activityName,
-    activityStatus: "",
+    activityStatus: editMode ? activityStatus : "",
   });
   const isUnselected = currentActivity.activityStatus === "";
   const { dispatch } = useContext(QuestFormContext);

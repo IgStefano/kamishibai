@@ -1,12 +1,9 @@
+import type { Quest } from "@/src/types/shared.types";
+import { getActivityStatus } from "@/src/types/shared.types";
 import { Icon } from "@iconify/react";
 import { classnames } from "@utils/classnames";
 import { formatDate } from "@utils/formatDate";
 import { Fragment } from "react";
-
-type Objective = {
-  name: string;
-  state: "success" | "failure" | "in_progress" | "not_started";
-};
 
 type renderedItem = {
   name: string;
@@ -14,26 +11,15 @@ type renderedItem = {
 };
 
 interface DescriptionProps {
-  id: string;
-  title: string;
-  level?: string | number;
-  description?: string;
-  startDate: Date;
-  reward?: string;
-  objectives: Objective[];
+  quest: Quest;
   openQuests: string[];
 }
 
-export default function Description({
-  id,
-  title,
-  level,
-  description,
-  startDate,
-  reward,
-  objectives,
-  openQuests,
-}: DescriptionProps) {
+export default function Description({ quest, openQuests }: DescriptionProps) {
+  console.log(quest);
+  const { id, activities, recommendedLevel, reward, description, startDate } =
+    quest;
+
   const icons = [
     { status: "success", icon: "ph:check-bold", color: "text-burgundy-400" },
     { status: "failure", icon: "ph:x-bold", color: "text-lightYellow-900" },
@@ -42,7 +28,7 @@ export default function Description({
       icon: "ph:minus-bold",
       color: "text-gray-600",
     },
-    { status: "not_started", icon: "ph:minus-bold", color: "text-gray-600" },
+    { status: "not_started", icon: "ph:dots-three", color: "text-gray-600" },
   ];
   const isOpen = openQuests.includes(id);
 
@@ -51,12 +37,13 @@ export default function Description({
     {
       name: "Objetivo atual",
       content:
-        objectives.find((objective) => objective.state === "in_progress")
-          ?.name || "",
+        activities.find(
+          (activity) => getActivityStatus(activity.status) === "in_progress"
+        )?.name || "",
     },
     { name: "Início", content: formatDate(startDate) },
     { name: "Recompensa", content: reward || "" },
-    { name: "Nível recomendado", content: level?.toString() || "" },
+    { name: "Nível recomendado", content: recommendedLevel?.toString() || "" },
   ];
 
   const item = (title: string, text: string, index: number) => {
@@ -94,13 +81,13 @@ export default function Description({
         </h6>
         <div className="flex flex-col gap-1">
           <div className="flex flex-col gap-2">
-            {objectives.map((objective) => {
+            {activities.map((activity) => {
               const iconData = icons.find(
-                (state) => state.status === objective.state
+                (state) => state.status === getActivityStatus(activity.status)
               );
               return (
                 <div
-                  key={objective.name}
+                  key={activity.name}
                   className={
                     "flex items-center gap-1 text-sm font-normal text-gray-800"
                   }
@@ -112,7 +99,7 @@ export default function Description({
                       className={iconData.color}
                     />
                   )}
-                  {objective.name}
+                  {activity.name}
                 </div>
               );
             })}

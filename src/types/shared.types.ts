@@ -7,6 +7,10 @@ export enum ActivityStatus {
   "failure" = 3,
 }
 
+export const getActivityStatus = (status: ActivityStatus) => {
+  return ActivityStatus[status] as keyof typeof ActivityStatus;
+};
+
 const Player = z.object({
   id: z.string().cuid(),
   name: z.string().optional(),
