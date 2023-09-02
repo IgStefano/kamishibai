@@ -15,6 +15,7 @@ interface InputProps extends ComponentPropsWithoutRef<"input"> {
   hidden?: boolean;
   activities?: ActivityClient[];
   setActivities?: Dispatch<SetStateAction<ActivityClient[]>>;
+  setPopulate?: Dispatch<SetStateAction<string>>;
 }
 
 export default function Input({
@@ -27,13 +28,14 @@ export default function Input({
   hidden = false,
   activities,
   setActivities,
+  setPopulate = undefined,
   ...rest
 }: InputProps) {
   const { dispatch, state } = useContext(QuestFormContext);
 
   const fieldName = (Object.keys(state) as (keyof typeof state)[]).find(
     (key) => key === name
-  );
+  ) as keyof typeof state;
   const [value, setValue] = useState(
     fieldName && typeof state[fieldName] === "string" ? state[fieldName] : ""
   );
@@ -69,10 +71,13 @@ export default function Input({
               payload: e.target.value,
               type: "field",
             });
+            if (setPopulate) setPopulate(e.target.value);
           }}
           value={
             fieldName === "startDate"
               ? state["startDate"]?.toISOString().substring(0, 10)
+              : fieldName === "activities"
+              ? ""
               : state[fieldName]
           }
           placeholder={placeholder}
