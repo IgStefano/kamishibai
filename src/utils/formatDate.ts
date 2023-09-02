@@ -15,7 +15,7 @@ const months = [
 
 export const formatDate = (date: Date) => {
   const day = date.getDate();
-  const month = months[date.getMonth()];
+  const month = months[date.getMonth()] as string;
   const year = date.getFullYear();
   return `${day} de ${month} de ${year}`;
 };

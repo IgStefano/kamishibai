@@ -6,10 +6,10 @@ export default function useOutsideClickRef({
 }: {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 }) {
-  const ref = useRef(null);
+  const ref = useRef<HTMLDivElement | null>(null);
 
   const handleClickOutside = (event: MouseEvent) => {
-    if (!ref?.current?.contains(event.target)) {
+    if (!ref?.current?.contains(event.target as HTMLDivElement)) {
       setIsOpen(false);
     }
   };

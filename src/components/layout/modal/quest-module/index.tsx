@@ -37,27 +37,32 @@ export default function QuestModule({ type }: QuestModalProps) {
       (Object.keys(populate.quest) as (keyof typeof populate.quest)[]).map(
         (key) => {
           if (key === "activities") {
-            return dispatch({
-              fieldName: key,
-              payload:
-                populate.quest &&
-                populate.quest.activities.map((activity) => {
-                  return {
-                    ...activity,
-                    activityName: activity.name,
-                    activityStatus: getActivityStatus(activity.status),
-                  };
-                }),
+            return (
+              populate.quest &&
+              dispatch({
+                fieldName: key,
+                payload:
+                  populate.quest &&
+                  populate.quest.activities.map((activity) => {
+                    return {
+                      ...activity,
+                      activityName: activity.name,
+                      activityStatus: getActivityStatus(activity.status),
+                    };
+                  }),
+                type: "field",
+              })
+            );
+          }
+          populate.quest &&
+            populate.quest[key] != undefined &&
+            dispatch({
+              fieldName: key === "name" ? "questName" : key,
+              payload: populate.quest[
+                key as keyof typeof populate.quest
+              ] as string,
               type: "field",
             });
-          }
-          dispatch({
-            fieldName: key === "name" ? "questName" : key,
-            payload:
-              populate.quest &&
-              populate.quest[key as keyof typeof populate.quest],
-            type: "field",
-          });
         }
       );
     }

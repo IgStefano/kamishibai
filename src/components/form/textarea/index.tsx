@@ -43,7 +43,7 @@ export default function TextArea({
           });
         }}
         placeholder={placeholder}
-        value={state[fieldName]}
+        value={fieldName !== "description" ? "" : state[fieldName]}
       />
     </div>
   );
