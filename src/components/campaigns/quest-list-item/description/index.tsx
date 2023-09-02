@@ -1,9 +1,11 @@
 import type { Quest } from "@/src/types/shared.types";
 import { getActivityStatus } from "@/src/types/shared.types";
-import { Icon } from "@iconify/react";
+import Activity from "@components/form/activity";
+import type { ActivityClient } from "@components/form/checkbox/checkbox-wrapper";
+import { api } from "@utils/api";
 import { classnames } from "@utils/classnames";
 import { formatDate } from "@utils/formatDate";
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
 
 type renderedItem = {
   name: string;
@@ -16,19 +18,37 @@ interface DescriptionProps {
 }
 
 export default function Description({ quest, openQuests }: DescriptionProps) {
-  const { id, activities, recommendedLevel, reward, description, startDate } =
-    quest;
+  const {
+    id,
+    activities,
+    recommendedLevel,
+    reward,
+    description,
+    startDate,
+    campaignId,
+  } = quest;
 
-  const icons = [
-    { status: "success", icon: "ph:check-bold", color: "text-burgundy-400" },
-    { status: "failure", icon: "ph:x-bold", color: "text-lightYellow-900" },
-    {
-      status: "in_progress",
-      icon: "ph:minus-bold",
-      color: "text-gray-600",
-    },
-    { status: "not_started", icon: "ph:dots-three", color: "text-gray-600" },
-  ];
+  const activitiesMutation = api.quest.editQuestActivities.useMutation();
+
+  const [formActivities, setFormActivities] = useState<ActivityClient[]>(
+    activities.map((activity) => {
+      return {
+        id: activity.id,
+        activityName: activity.name,
+        activityStatus: getActivityStatus(activity.status),
+        questId: id,
+      };
+    }) || []
+  );
+
+  useEffect(() => {
+    activitiesMutation.mutate({
+      activities: formActivities,
+      campaignId,
+      questId: id,
+    });
+  }, [formActivities]);
+
   const isOpen = openQuests.includes(id);
 
   const renderedItems: renderedItem[] = [
@@ -59,7 +79,7 @@ export default function Description({ quest, openQuests }: DescriptionProps) {
   return (
     <div
       className={classnames(
-        "flex flex-col gap-4 overflow-hidden transition-all duration-500",
+        "flex flex-col gap-4 transition-all duration-500",
         !isOpen ? "pointer-events-none max-h-0 opacity-0" : "mt-4 max-h-screen"
       )}
     >
@@ -79,28 +99,19 @@ export default function Description({ quest, openQuests }: DescriptionProps) {
         </h6>
         <div className="flex flex-col gap-1">
           <div className="flex flex-col gap-2">
-            {activities.map((activity) => {
-              const iconData = icons.find(
-                (state) => state.status === getActivityStatus(activity.status)
-              );
-              return (
-                <div
-                  key={activity.name}
-                  className={
-                    "flex items-center gap-1 text-sm font-normal text-gray-800"
-                  }
-                >
-                  {iconData !== undefined && (
-                    <Icon
-                      fontSize={24}
-                      icon={iconData.icon}
-                      className={iconData.color}
-                    />
-                  )}
-                  {activity.name}
-                </div>
-              );
-            })}
+            {activities.map((activity) => (
+              <Activity
+                key={activity.id}
+                activityName={activity.name}
+                activityStatus={getActivityStatus(activity.status)}
+                id={activity.id}
+                questId={quest.id}
+                editMode
+                activities={formActivities}
+                setActivities={setFormActivities}
+                popUpOrientation="horizontal"
+              />
+            ))}
           </div>
         </div>
       </div>

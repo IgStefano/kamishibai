@@ -20,6 +20,7 @@ interface ActivityProps extends ActivityClient {
   setActivities: Dispatch<SetStateAction<ActivityClient[]>>;
   deletable?: boolean;
   editMode?: boolean;
+  popUpOrientation?: "vertical" | "horizontal";
 }
 
 export default function Activity({
@@ -30,6 +31,7 @@ export default function Activity({
   setActivities,
   deletable = false,
   editMode = false,
+  popUpOrientation = "vertical",
 }: ActivityProps) {
   const [isOpen, setIsOpen] = useState(false);
   const selectRef = useOutsideClickRef({ setIsOpen });
@@ -61,7 +63,6 @@ export default function Activity({
       payload: activities,
       type: "field",
     });
-    console.log(activities);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentActivity]);
 
@@ -108,13 +109,17 @@ export default function Activity({
         <div
           ref={selectRef}
           className={classnames(
-            "form-select absolute z-10 flex translate-y-24 appearance-none flex-col border-0 bg-none px-2 transition-all duration-500",
+            "form-select absolute z-10 flex appearance-none border-0 bg-none px-2 transition-all duration-500",
             isOpen
               ? "opacity-100"
-              : "pointer-events-none -translate-x-12 opacity-0"
+              : "pointer-events-none -translate-x-12 opacity-0",
+            popUpOrientation === "vertical"
+              ? "translate-y-24 flex-col"
+              : "translate-y-12"
           )}
         >
           <Option
+            popUpOrientation={popUpOrientation}
             onClick={() => {
               setCurrentActivity({
                 ...currentActivity,
@@ -130,6 +135,7 @@ export default function Activity({
             value="not_started"
           />
           <Option
+            popUpOrientation={popUpOrientation}
             onClick={() => {
               setCurrentActivity({
                 ...currentActivity,
@@ -145,6 +151,7 @@ export default function Activity({
             value="in_progress"
           />
           <Option
+            popUpOrientation={popUpOrientation}
             onClick={() => {
               setCurrentActivity({
                 ...currentActivity,
@@ -160,6 +167,7 @@ export default function Activity({
             value="success"
           />
           <Option
+            popUpOrientation={popUpOrientation}
             onClick={() => {
               setCurrentActivity({
                 ...currentActivity,

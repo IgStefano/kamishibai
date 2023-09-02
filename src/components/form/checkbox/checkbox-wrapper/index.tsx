@@ -79,7 +79,7 @@ export function ActivitiesWrapper({
       <AnimatePresence>
         {activities.map((activity) => (
           <Activity
-            id={activity.activityName}
+            id={activity.id || activity.activityName}
             key={activity.activityName}
             activityName={activity.activityName}
             activityStatus={activity.activityStatus}
