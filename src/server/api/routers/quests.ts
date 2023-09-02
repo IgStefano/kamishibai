@@ -91,7 +91,6 @@ export const questRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await ctx.prisma.$transaction(
         input.activities.map((activity) => {
-          console.log(activity);
           return ctx.prisma?.activity.update({
             where: { id: activity.id },
             data: {
@@ -162,5 +161,60 @@ export const questRouter = createTRPCRouter({
         skip: 10 * (input.page - 1),
       });
       return quests.map((quest) => questMapper(quest));
+    }),
+
+  editQuestActivities: gameMasterProcedure
+    .input(
+      z.object({
+        questId: z.string(),
+        activities: z
+          .array(
+            z.object({
+              id: z.string().optional(),
+              activityName: z.string().min(5).max(64),
+              activityStatus: z.enum([
+                "success",
+                "failure",
+                "in_progress",
+                "not_started",
+              ]),
+              questId: z.string().optional(),
+            })
+          )
+          .min(1),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.$transaction(
+        input.activities.map((activity) => {
+          return ctx.prisma?.activity.update({
+            where: { id: activity.id },
+            data: {
+              name: activity.activityName,
+              status: ActivityStatus[activity.activityStatus],
+            },
+          });
+        })
+      );
+
+      return ctx.prisma.quest.update({
+        where: {
+          id: input.questId,
+        },
+        data: {
+          activities: {
+            createMany: {
+              data: input.activities.map((activity) => {
+                return {
+                  id: activity.id,
+                  name: activity.activityName,
+                  status: ActivityStatus[activity.activityStatus],
+                };
+              }),
+              skipDuplicates: true,
+            },
+          },
+        },
+      });
     }),
 });
