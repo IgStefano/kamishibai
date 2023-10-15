@@ -28,7 +28,9 @@ export default function Description({ quest, openQuests }: DescriptionProps) {
     campaignId,
   } = quest;
 
-  const activitiesMutation = api.quest.editQuestActivities.useMutation();
+  const activitiesMutation = api.quest.editQuestActivities.useMutation({
+    onSuccess: () => api.useContext().quest.invalidate(),
+  });
 
   const [formActivities, setFormActivities] = useState<ActivityClient[]>(
     activities.map((activity) => {

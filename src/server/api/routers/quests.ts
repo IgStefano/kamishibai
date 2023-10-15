@@ -89,17 +89,18 @@ export const questRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      await ctx.prisma.$transaction(
-        input.activities.map((activity) => {
-          return ctx.prisma?.activity.update({
-            where: { id: activity.id },
-            data: {
+      await ctx.prisma.$transaction([
+        ctx.prisma.activity.deleteMany({ where: { questId: input.questId } }),
+        ctx.prisma.activity.createMany({
+          data: input.activities.map((activity) => {
+            return {
               name: activity.activityName,
               status: ActivityStatus[activity.activityStatus],
-            },
-          });
-        })
-      );
+              questId: input.questId,
+            };
+          }),
+        }),
+      ]);
 
       return ctx.prisma.quest.update({
         where: {
@@ -108,18 +109,6 @@ export const questRouter = createTRPCRouter({
         data: {
           name: input.questName,
           description: input.description,
-          activities: {
-            createMany: {
-              data: input.activities.map((activity) => {
-                return {
-                  id: activity.id,
-                  name: activity.activityName,
-                  status: ActivityStatus[activity.activityStatus],
-                };
-              }),
-              skipDuplicates: true,
-            },
-          },
           startDate: input.startDate,
           isVisible: input.isVisible,
           reward: input.reward,
@@ -186,35 +175,22 @@ export const questRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      await ctx.prisma.$transaction(
-        input.activities.map((activity) => {
-          return ctx.prisma?.activity.update({
-            where: { id: activity.id },
-            data: {
+      await ctx.prisma.$transaction([
+        ctx.prisma.activity.deleteMany({ where: { questId: input.questId } }),
+        ctx.prisma.activity.createMany({
+          data: input.activities.map((activity) => {
+            return {
               name: activity.activityName,
               status: ActivityStatus[activity.activityStatus],
-            },
-          });
-        })
-      );
+              questId: input.questId,
+            };
+          }),
+        }),
+      ]);
 
-      return ctx.prisma.quest.update({
+      return ctx.prisma.quest.findMany({
         where: {
           id: input.questId,
-        },
-        data: {
-          activities: {
-            createMany: {
-              data: input.activities.map((activity) => {
-                return {
-                  id: activity.id,
-                  name: activity.activityName,
-                  status: ActivityStatus[activity.activityStatus],
-                };
-              }),
-              skipDuplicates: true,
-            },
-          },
         },
       });
     }),
