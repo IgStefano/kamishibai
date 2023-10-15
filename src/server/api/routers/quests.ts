@@ -148,13 +148,14 @@ export const questRouter = createTRPCRouter({
     }),
 
   getQuests: protectedProcedure
-    .input(z.object({ page: z.number().default(1) }))
+    .input(z.object({ campaignId: z.string(), page: z.number().default(1) }))
     .query(async ({ ctx, input }) => {
       const quests = await ctx.prisma.quest.findMany({
         include: {
           activities: true,
         },
         where: {
+          campaignId: input.campaignId,
           status: 1,
         },
         take: 10,
