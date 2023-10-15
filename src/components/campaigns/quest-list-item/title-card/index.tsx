@@ -10,7 +10,7 @@ interface TitleCardProps {
   openQuests: string[];
   setOpenQuests: Dispatch<SetStateAction<string[]>>;
   editable: boolean;
-  mutation?: () => void;
+  mutation?: (() => void) | (() => Promise<void>);
 }
 
 export default function TitleCard({

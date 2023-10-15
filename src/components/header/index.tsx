@@ -7,13 +7,14 @@ import { useContext } from "react";
 import { dosis } from "../../styles/fonts";
 import { classnames } from "../../utils/classnames";
 import { ModalContext } from "@/src/contexts/modal";
+import Link from "next/link";
 
 interface HeaderProps {
   message?: string;
   subHeading?: string;
   addIcon?: boolean;
   isLogged?: boolean;
-  mutation?: () => void;
+  mutation?: (() => void) | (() => Promise<void>);
 }
 
 export default function Header({
@@ -27,15 +28,17 @@ export default function Header({
   return (
     <header className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
-        <h1
-          className={classnames(
-            "w-full text-4xl font-medium text-burgundy",
-            !isLogged ? "text-center" : "",
-            LTCarpet.className
-          )}
-        >
-          Kamishibai
-        </h1>
+        <Link href={"/"}>
+          <h1
+            className={classnames(
+              "w-full text-4xl font-medium text-burgundy",
+              !isLogged ? "text-center" : "",
+              LTCarpet.className
+            )}
+          >
+            Kamishibai
+          </h1>
+        </Link>
         {isLogged && (
           <span
             onClick={() => void signOut()}

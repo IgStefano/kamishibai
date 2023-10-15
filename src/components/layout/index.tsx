@@ -7,7 +7,7 @@ interface LayoutProps {
   subHeading?: string;
   addIcon?: boolean;
   isLogged?: boolean;
-  mutation?: () => void;
+  mutation?: (() => void) | (() => Promise<void>);
 }
 
 export default function Layout({

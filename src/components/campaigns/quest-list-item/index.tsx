@@ -29,8 +29,9 @@ export default function QuestListItem({
     id: router.query.id as string,
   })?.data;
   const mutation = api.quest.editQuest.useMutation();
+  const invalidate = api.useContext().quest.invalidate();
 
-  const handleEditQuest = () => {
+  const handleEditQuest = async () => {
     const {
       activities,
       description,
@@ -65,6 +66,7 @@ export default function QuestListItem({
       });
 
       mutation.mutate(mutator);
+      await invalidate;
     }
     setIsModalOpen(false);
   };

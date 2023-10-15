@@ -26,12 +26,14 @@ export default function CampaignQuests() {
   const campaign = api.campaign.getCampaignById.useQuery({
     id: router.query.id as string,
   })?.data;
-  const quests = api.quest.getQuests.useQuery({}).data;
+  const quests =
+    campaign && api.quest.getQuests.useQuery({ campaignId: campaign.id }).data;
   const mutation = api.quest.newQuest.useMutation();
+  const invalidate = api.useContext().quest.invalidate();
 
   const [openQuests, setOpenQuests] = useState<string[]>([]);
 
-  const handleCreateQuest = () => {
+  const handleCreateQuest = async () => {
     if (campaign) {
       const mutator = {
         campaignId: campaign.id,
@@ -55,6 +57,7 @@ export default function CampaignQuests() {
       });
 
       mutation.mutate(mutator);
+      await invalidate;
     }
 
     setIsModalOpen(false);

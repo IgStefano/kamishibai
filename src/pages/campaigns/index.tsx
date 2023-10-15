@@ -12,13 +12,15 @@ export default function Campaigns() {
   const { setIsModalOpen } = useContext(ModalContext);
   const campaigns = api.campaign.getCampaigns.useQuery({}).data;
   const mutation = api.campaign.newCampaign.useMutation();
+  const invalidate = api.useContext().campaign.invalidate();
 
-  const handleCreateCampaign = () => {
+  const handleCreateCampaign = async () => {
     const campaignName =
       (document.getElementById("campaignName") as HTMLInputElement)?.value ||
       "";
     mutation.mutate({ campaignName });
     setIsModalOpen(false);
+    await invalidate;
   };
 
   return (
