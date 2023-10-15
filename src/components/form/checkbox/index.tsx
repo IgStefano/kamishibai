@@ -16,7 +16,6 @@ export default function Checkbox({
   setCheckboxes,
 }: CheckboxT) {
   const [isChecked, setIsChecked] = useState(checked);
-  const [isDisabled, setIsDisabled] = useState(disabled);
   const [currentLabel, setCurrentLabel] = useState(label);
 
   return (
@@ -30,24 +29,24 @@ export default function Checkbox({
       <div
         className={classnames(
           "flex w-fit items-center gap-1",
-          isDisabled ? "opacity-50" : "cursor-pointer"
+          disabled ? "opacity-50" : "cursor-pointer"
         )}
       >
         <input
           id={id}
           checked={isChecked}
-          onChange={() => !isDisabled && setIsChecked(!isChecked)}
+          onChange={() => !disabled && setIsChecked(!isChecked)}
           className={classnames(
             // prettier-ignore
             "h-3 w-3 appearance-none bg-lightYellow-300 outline-none checked:relative checked:before:absolute checked:before:right-[1px] checked:before:top-[-5px] checked:before:text-sm checked:before:text-burgundy-700 checked:before:content-['\xb92713'] checked:before:bg-burgundy-900 ",
-            !isDisabled ? "cursor-pointer" : ""
+            !disabled ? "cursor-pointer" : ""
           )}
           type="checkbox"
         />
         <label
           className={classnames(
             "text-xs text-burgundy",
-            !isDisabled ? "cursor-pointer" : ""
+            !disabled ? "cursor-pointer" : ""
           )}
           htmlFor={name}
         >

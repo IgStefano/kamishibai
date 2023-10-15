@@ -16,7 +16,6 @@ export default function TextArea({
   required,
   disabled,
   placeholder,
-  ...rest
 }: TextAreaProps) {
   const { dispatch, state } = useContext(QuestFormContext);
 
