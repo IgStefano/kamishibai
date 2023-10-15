@@ -28,10 +28,11 @@ export default function QuestListItem({
   const campaign = api.campaign.getCampaignById.useQuery({
     id: router.query.id as string,
   })?.data;
-  const mutation = api.quest.editQuest.useMutation();
-  const invalidate = api.useContext().quest.invalidate();
+  const mutation = api.quest.editQuest.useMutation({
+    onSuccess: () => api.useContext().quest.invalidate(),
+  });
 
-  const handleEditQuest = async () => {
+  const handleEditQuest = () => {
     const {
       activities,
       description,
@@ -66,7 +67,6 @@ export default function QuestListItem({
       });
 
       mutation.mutate(mutator);
-      await invalidate;
     }
     setIsModalOpen(false);
   };

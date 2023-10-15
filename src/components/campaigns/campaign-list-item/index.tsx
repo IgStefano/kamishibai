@@ -24,10 +24,10 @@ export default function CampaignListItem({
   const router = useRouter();
   const { setIsModalOpen, setModalOptions } = useContext(ModalContext);
   const campaign = api.campaign.getCampaignById.useQuery({ id }).data;
-  const mutation = api.campaign.editCampaign.useMutation();
-  const invalidate = api.useContext().campaign.invalidate();
-
-  const handleEditCampaign = async () => {
+  const mutation = api.campaign.editCampaign.useMutation({
+    onSuccess: () => api.useContext().campaign.invalidate(),
+  });
+  const handleEditCampaign = () => {
     if (campaign)
       mutation.mutate({
         campaignId: campaign.id,
@@ -37,7 +37,6 @@ export default function CampaignListItem({
         gameMaster: campaign.gameMaster,
       });
     setIsModalOpen(false);
-    await invalidate;
   };
 
   return (
