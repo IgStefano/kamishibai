@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import type { Quest } from "@/src/types/shared.types";
 import { getActivityStatus } from "@/src/types/shared.types";
 import Activity from "@components/form/activity";

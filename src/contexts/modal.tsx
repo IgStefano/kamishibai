@@ -5,7 +5,7 @@ import type { Campaign, Quest } from "../types/shared.types";
 type ModalOptions = {
   module: "campaign" | "quest";
   type: "new" | "edit";
-  mutation: (() => void) | (() => Promise<void>);
+  mutation: () => void;
   populate?: {
     campaign?: { name: Campaign["name"] };
     quest?: Quest;

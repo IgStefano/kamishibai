@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import Input from "@components/form/input";
 import { AnimatePresence, motion } from "framer-motion";
 import type { ActivityClient } from "@components/form/checkbox/checkbox-wrapper";
