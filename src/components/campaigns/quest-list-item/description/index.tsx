@@ -44,11 +44,25 @@ export default function Description({ quest, openQuests }: DescriptionProps) {
   );
 
   useEffect(() => {
-    activitiesMutation.mutate({
-      activities: formActivities,
-      campaignId,
-      questId: id,
-    });
+    if (
+      JSON.stringify(formActivities) !==
+      JSON.stringify(
+        activities.map((activity) => {
+          return {
+            id: activity.id,
+            activityName: activity.name,
+            activityStatus: getActivityStatus(activity.status),
+            questId: id,
+          };
+        })
+      )
+    ) {
+      activitiesMutation.mutate({
+        activities: formActivities,
+        campaignId,
+        questId: id,
+      });
+    }
   }, [formActivities]);
 
   const isOpen = openQuests.includes(id);
