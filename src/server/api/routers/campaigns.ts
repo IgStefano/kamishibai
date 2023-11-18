@@ -6,6 +6,7 @@ import {
 import { z } from "zod";
 import { campaignMapper } from "./mappers";
 import { TRPCError } from "@trpc/server";
+import type { Campaign, User } from "@prisma/client";
 
 export const campaignRouter = createTRPCRouter({
   newCampaign: protectedProcedure
@@ -104,22 +105,27 @@ export const campaignRouter = createTRPCRouter({
         skip: 10 * (input.page - 1),
       });
 
-      const gameMaster = await ctx.prisma.user.findFirst({
-        where: {
-          id: {
-            equals: ctx.session.user.id,
+      const gameMasterPromises = rawCampaigns.map((campaign) =>
+        ctx.prisma.user.findFirst({
+          where: {
+            id: campaign.gameMaster,
           },
-        },
-      });
+        })
+      );
 
-      const mappedCampaigns = rawCampaigns.map((campaign) => {
+      const gameMasters = (await Promise.all(gameMasterPromises)) as User[];
+
+      const mappedCampaigns = rawCampaigns.map((campaign, index) => {
+        const gameMaster = gameMasters[index];
         return {
           ...campaign,
-          gameMaster: gameMaster?.name ? gameMaster.name : "",
+          gameMaster: gameMaster ? gameMaster.name : "",
         };
       });
 
-      return mappedCampaigns.map((campaign) => campaignMapper(campaign));
+      return (mappedCampaigns as Campaign[]).map((campaign) =>
+        campaignMapper(campaign)
+      );
     }),
 
   getCampaignById: protectedProcedure
