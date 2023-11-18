@@ -2,7 +2,7 @@
 import QuestListItem from "@components/campaigns/quest-list-item";
 import Layout from "@components/layout";
 import type { IncomingMessage, ServerResponse } from "http";
-import { useContext, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { getServerAuthSession } from "../../../server/auth";
 import { api } from "@utils/api";
 import { useRouter } from "next/router";
@@ -16,17 +16,6 @@ export default function CampaignQuests() {
     useContext(ModalContext);
   const { state } = useContext(QuestFormContext);
   const stateRef = useRef(state);
-  stateRef.current = state;
-
-  const {
-    activities,
-    description,
-    mainObjective,
-    questName,
-    recommendedLevel,
-    reward,
-    startDate,
-  } = stateRef.current;
 
   const router = useRouter();
   const campaign = api.campaign.getCampaignById.useQuery({
@@ -45,6 +34,16 @@ export default function CampaignQuests() {
   const [openQuests, setOpenQuests] = useState<string[]>([]);
 
   const handleCreateQuest = () => {
+    const {
+      activities,
+      description,
+      mainObjective,
+      questName,
+      recommendedLevel,
+      reward,
+      startDate,
+    } = stateRef.current;
+
     const mutator = {
       campaignId: router.query.id as string,
       questName,
