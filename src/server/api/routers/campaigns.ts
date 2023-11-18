@@ -16,6 +16,19 @@ export const campaignRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      const hasDuplicate = await ctx.prisma.campaign.findFirst({
+        where: {
+          name: input.campaignName,
+        },
+      });
+
+      if (hasDuplicate) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Duplicate campaign name found: " + input.campaignName,
+        });
+      }
+
       const newCampaign = await ctx.prisma.campaign.create({
         data: {
           gameMaster: ctx.session.user.id,
