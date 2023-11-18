@@ -53,7 +53,7 @@ export default function Header({
           {subHeading}
         </h2>
       )}
-      {message && (
+      {addIcon && message && (
         <div className="flex justify-between gap-2">
           <h4
             className={classnames(

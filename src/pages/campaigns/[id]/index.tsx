@@ -10,8 +10,13 @@ import { ModalContext } from "@/src/contexts/modal";
 import { QuestFormContext } from "@/src/contexts/questForm";
 import useModalState from "@/src/hooks/useModalState";
 import { useQueryClient } from "@tanstack/react-query";
+import { Prisma } from "@prisma/client";
 
-export default function CampaignQuests() {
+interface CampaignQuestsProps {
+  isGameMaster: boolean;
+}
+
+export default function CampaignQuests({ isGameMaster }: CampaignQuestsProps) {
   const { isModalOpen, setIsModalOpen, modalOptions, setModalOptions } =
     useContext(ModalContext);
   const { state } = useContext(QuestFormContext);
@@ -78,7 +83,7 @@ export default function CampaignQuests() {
   return (
     <Layout
       isLogged
-      addIcon
+      addIcon={isGameMaster}
       message="Crie agora uma aventura para esta campanha!"
       subHeading={campaign?.name || ""}
       mutation={handleCreateQuest}
@@ -100,6 +105,7 @@ export default function CampaignQuests() {
 export async function getServerSideProps(ctx: {
   req: IncomingMessage & { cookies: Partial<{ [key: string]: string }> };
   res: ServerResponse<IncomingMessage>;
+  query: { [key: string]: string };
 }) {
   const session = await getServerAuthSession(ctx);
   if (!session) {
@@ -110,7 +116,17 @@ export async function getServerSideProps(ctx: {
     };
   }
 
+  const campaign = await prisma?.campaign.findFirst({
+    where: {
+      id: {
+        equals: ctx.query.id,
+      },
+    },
+  });
+
+  const isGameMaster = session.user?.id === campaign?.gameMaster;
+
   return {
-    props: { session },
+    props: { isGameMaster },
   };
 }

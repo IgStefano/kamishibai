@@ -8,7 +8,7 @@ import { z } from "zod";
 import { questMapper } from "./mappers";
 
 export const questRouter = createTRPCRouter({
-  newQuest: protectedProcedure
+  newQuest: gameMasterProcedure
     .input(
       z.object({
         questName: z.string().min(5).max(64),
