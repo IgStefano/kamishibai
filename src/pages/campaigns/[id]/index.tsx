@@ -10,7 +10,7 @@ import { ModalContext } from "@/src/contexts/modal";
 import { QuestFormContext } from "@/src/contexts/questForm";
 import useModalState from "@/src/hooks/useModalState";
 import { useQueryClient } from "@tanstack/react-query";
-import { Prisma } from "@prisma/client";
+import { prisma } from "../../../server/db";
 
 interface CampaignQuestsProps {
   isGameMaster: boolean;
