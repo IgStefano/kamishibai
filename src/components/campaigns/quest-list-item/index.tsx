@@ -1,4 +1,10 @@
-import { type Dispatch, type SetStateAction, useContext, useRef } from "react";
+import {
+  type Dispatch,
+  type SetStateAction,
+  useContext,
+  useRef,
+  useEffect,
+} from "react";
 import Description from "./description";
 import TitleCard from "./title-card";
 import type { Quest } from "@/src/types/shared.types";
@@ -25,7 +31,6 @@ export default function QuestListItem({
 
   const { state } = useContext(QuestFormContext);
   const stateRef = useRef(state);
-  stateRef.current = state;
 
   const router = useRouter();
   const campaign = api.campaign.getCampaignById.useQuery({
@@ -76,6 +81,10 @@ export default function QuestListItem({
   };
 
   useModalState({ mutation, modalOptions, isModalOpen, setModalOptions });
+
+  useEffect(() => {
+    stateRef.current = state;
+  }, [state]);
 
   return (
     <>

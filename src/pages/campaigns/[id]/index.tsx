@@ -21,15 +21,16 @@ export default function CampaignQuests() {
   const campaign = api.campaign.getCampaignById.useQuery({
     id: router.query.id as string,
   })?.data;
-  const quests = api.quest.getQuests.useQuery({
-    campaignId: campaign?.id || "",
-    page: 1,
-  })?.data;
   const queryClient = useQueryClient();
   const mutation = api.quest.newQuest.useMutation({
     onSuccess: () =>
       queryClient.invalidateQueries().then(() => setIsModalOpen(false)),
   });
+
+  const quests = api.quest.getQuests.useQuery({
+    campaignId: campaign?.id || "",
+    page: 1,
+  })?.data;
 
   const [openQuests, setOpenQuests] = useState<string[]>([]);
 
@@ -69,6 +70,10 @@ export default function CampaignQuests() {
   };
 
   useModalState({ mutation, modalOptions, isModalOpen, setModalOptions });
+
+  useEffect(() => {
+    stateRef.current = state;
+  }, [state]);
 
   return (
     <Layout
