@@ -39,7 +39,15 @@ export default function Input({
   const [value, setValue] = useState(
     fieldName && typeof state[fieldName] === "string" ? state[fieldName] : ""
   );
+
+  const [lengthError, setLengthError] = useState(false);
   const handleAddActivity = () => {
+    if (typeof value === "string" && value.length < 5) {
+      setLengthError(true);
+      return;
+    }
+    setLengthError(false);
+
     if (setActivities && activities) {
       setActivities([
         ...activities,
@@ -49,6 +57,11 @@ export default function Input({
         },
       ]);
       setValue("");
+      dispatch({
+        fieldName: name,
+        payload: "",
+        type: "field",
+      });
     }
   };
 
@@ -87,13 +100,18 @@ export default function Input({
           {...rest}
         />
         {addNew && setActivities && activities && (
-          <Icon
-            onClick={() => {
-              handleAddActivity();
-            }}
-            icon="ph:plus"
-            className="absolute right-2 top-2 cursor-pointer text-burgundy-400"
-          />
+          <>
+            <Icon
+              onClick={() => handleAddActivity()}
+              icon="ph:plus"
+              className="absolute right-2 top-2 cursor-pointer text-burgundy-400"
+            />
+            {lengthError && (
+              <p className="mt-1 text-xs text-burgundy-300">
+                A atividade precisa ter ao menos 5 caracteres.
+              </p>
+            )}
+          </>
         )}
       </div>
     </div>
