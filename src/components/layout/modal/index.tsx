@@ -13,7 +13,7 @@ export default function Modal() {
   const { isModalOpen, setIsModalOpen, modalOptions } =
     useContext(ModalContext);
   const modalRef = useOutsideClickRef({ setIsOpen: setIsModalOpen });
-  const { module, type, mutation } = modalOptions;
+  const { module, type, mutation, state } = modalOptions;
 
   const content = {
     campaign: <CampaignModule />,
@@ -24,10 +24,12 @@ export default function Modal() {
     new: {
       button: `Criar ${module === "quest" ? "Aventura" : "Campanha"}`,
       title: `Crie a sua ${module === "quest" ? "aventura" : "campanha"}`,
+      error: `criar a sua ${module === "quest" ? "aventura" : "campanha"}`,
     },
     edit: {
       button: `Editar ${module === "quest" ? "Aventura" : "Campanha"}`,
       title: `Edite esta ${module === "quest" ? "aventura" : "campanha"}`,
+      error: `editar a sua ${module === "quest" ? "aventura" : "campanha"}`,
     },
   };
 
@@ -55,7 +57,17 @@ export default function Modal() {
         <div className="max-h-[60vh] w-full overflow-y-auto">
           {content[module]}
         </div>
-        <Button label={label[type].button} onClick={mutation} />
+        <Button
+          label={label[type].button}
+          onClick={mutation}
+          disabled={state === "isLoading"}
+        />
+        {state === "isError" && (
+          <p className="text-center text-sm font-bold text-burgundy-300">
+            Encontramos um erro ao tentar {label[type].error}. Por favor, tente
+            novamente mais tarde.
+          </p>
+        )}
       </div>
     </section>
   );

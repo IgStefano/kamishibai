@@ -2,7 +2,7 @@ import type { Dispatch, ReactNode, SetStateAction } from "react";
 import { createContext, useState } from "react";
 import type { Campaign, Quest } from "../types/shared.types";
 
-type ModalOptions = {
+export type ModalOptions = {
   module: "campaign" | "quest";
   type: "new" | "edit";
   mutation: () => void;
@@ -10,6 +10,7 @@ type ModalOptions = {
     campaign?: { name: Campaign["name"] };
     quest?: Quest;
   };
+  state?: "isSuccess" | "isLoading" | "isError" | "isIdle";
 };
 
 interface ModalContextProps {
@@ -27,6 +28,7 @@ export const ModalContext = createContext<ModalContextProps>({
     type: "new",
     mutation: () => null,
     populate: undefined,
+    state: "isIdle",
   },
   setModalOptions: () => null,
 });
@@ -42,6 +44,7 @@ export function ModalProvider({
     type: "new",
     mutation: () => null,
     populate: undefined,
+    state: "isIdle",
   });
 
   return (

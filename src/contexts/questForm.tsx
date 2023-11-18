@@ -8,7 +8,7 @@ interface QuestForm {
   mainObjective: string;
   activities: ActivityClient[];
   reward: string;
-  recommendedLevel: string | number;
+  recommendedLevel: string;
   description: string;
 }
 

@@ -7,13 +7,18 @@ import { getServerAuthSession } from "../../server/auth";
 import { dosis } from "../../styles/fonts";
 import { api } from "@utils/api";
 import { ModalContext } from "@/src/contexts/modal";
+import { useQueryClient } from "@tanstack/react-query";
+import useModalState from "@/src/hooks/useModalState";
 
 export default function Campaigns() {
-  const { setIsModalOpen } = useContext(ModalContext);
+  const { setIsModalOpen, isModalOpen, setModalOptions, modalOptions } =
+    useContext(ModalContext);
   const campaigns = api.campaign.getCampaigns.useQuery({});
   const { data, isSuccess } = campaigns;
+  const queryClient = useQueryClient();
   const mutation = api.campaign.newCampaign.useMutation({
-    onSuccess: () => api.useContext().campaign.invalidate(),
+    onSuccess: () =>
+      queryClient.invalidateQueries().then(() => setIsModalOpen(false)),
   });
 
   const handleCreateCampaign = () => {
@@ -21,8 +26,9 @@ export default function Campaigns() {
       (document.getElementById("campaignName") as HTMLInputElement)?.value ||
       "";
     mutation.mutate({ campaignName });
-    setIsModalOpen(false);
   };
+
+  useModalState({ mutation, modalOptions, isModalOpen, setModalOptions });
 
   return (
     <Layout

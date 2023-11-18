@@ -1,5 +1,7 @@
 import { ModalContext } from "@/src/contexts/modal";
+import useModalState from "@/src/hooks/useModalState";
 import { Icon } from "@iconify/react";
+import { useQueryClient } from "@tanstack/react-query";
 import { api } from "@utils/api";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -22,10 +24,13 @@ export default function CampaignListItem({
   image = undefined,
 }: CampaignListItemProps) {
   const router = useRouter();
-  const { setIsModalOpen, setModalOptions } = useContext(ModalContext);
+  const { isModalOpen, setIsModalOpen, setModalOptions, modalOptions } =
+    useContext(ModalContext);
   const campaign = api.campaign.getCampaignById.useQuery({ id }).data;
+  const queryClient = useQueryClient();
   const mutation = api.campaign.editCampaign.useMutation({
-    onSuccess: () => api.useContext().campaign.invalidate(),
+    onSuccess: () =>
+      queryClient.invalidateQueries().then(() => setIsModalOpen(false)),
   });
   const handleEditCampaign = () => {
     if (campaign)
@@ -36,8 +41,9 @@ export default function CampaignListItem({
             ?.value || title,
         gameMaster: campaign.gameMaster,
       });
-    setIsModalOpen(false);
   };
+
+  useModalState({ mutation, modalOptions, isModalOpen, setModalOptions });
 
   return (
     <li className="relative flex w-full cursor-pointer gap-4 rounded-3xl bg-lightYellow py-1 px-4 drop-shadow-default">

@@ -6,6 +6,8 @@ import { useRouter } from "next/router";
 import { api } from "@utils/api";
 import { ModalContext } from "@/src/contexts/modal";
 import { QuestFormContext } from "@/src/contexts/questForm";
+import useModalState from "@/src/hooks/useModalState";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface QuestListItemProps {
   quest: Quest;
@@ -18,7 +20,8 @@ export default function QuestListItem({
   openQuests,
   setOpenQuests,
 }: QuestListItemProps) {
-  const { setIsModalOpen } = useContext(ModalContext);
+  const { isModalOpen, setIsModalOpen, modalOptions, setModalOptions } =
+    useContext(ModalContext);
 
   const { state } = useContext(QuestFormContext);
   const stateRef = useRef(state);
@@ -28,8 +31,10 @@ export default function QuestListItem({
   const campaign = api.campaign.getCampaignById.useQuery({
     id: router.query.id as string,
   })?.data;
+  const queryClient = useQueryClient();
   const mutation = api.quest.editQuest.useMutation({
-    onSuccess: () => api.useContext().quest.invalidate(),
+    onSuccess: () =>
+      queryClient.invalidateQueries().then(() => setIsModalOpen(false)),
   });
 
   const handleEditQuest = () => {
@@ -68,8 +73,9 @@ export default function QuestListItem({
 
       mutation.mutate(mutator);
     }
-    setIsModalOpen(false);
   };
+
+  useModalState({ mutation, modalOptions, isModalOpen, setModalOptions });
 
   return (
     <>
