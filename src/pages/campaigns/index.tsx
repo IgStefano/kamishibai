@@ -10,7 +10,8 @@ import { ModalContext } from "@/src/contexts/modal";
 
 export default function Campaigns() {
   const { setIsModalOpen } = useContext(ModalContext);
-  const campaigns = api.campaign.getCampaigns.useQuery({}).data;
+  const campaigns = api.campaign.getCampaigns.useQuery({});
+  const { data, isSuccess } = campaigns;
   const mutation = api.campaign.newCampaign.useMutation({
     onSuccess: () => api.useContext().campaign.invalidate(),
   });
@@ -30,20 +31,28 @@ export default function Campaigns() {
       message="Abra uma nova campanha e crie as aventuras do seu grupo!"
       mutation={handleCreateCampaign}
     >
-      <Divider />
-      <p className={`text-sm text-gray-500 ${dosis.className} mb-4 w-full`}>
-        Selecione uma campanha para ver suas aventuras!
-      </p>
-      <section className="flex flex-col gap-3">
-        {campaigns?.map((campaign) => (
-          <CampaignListItem
-            key={campaign.id}
-            id={campaign.id}
-            master={campaign.gameMaster}
-            title={campaign.name}
-          />
-        ))}
-      </section>
+      <>
+        {isSuccess && data && data.length > 0 && (
+          <>
+            <Divider />
+            <p
+              className={`text-sm text-gray-500 ${dosis.className} mb-4 w-full`}
+            >
+              Selecione uma campanha para ver suas aventuras!
+            </p>
+            <section className="flex flex-col gap-3">
+              {data?.map((campaign) => (
+                <CampaignListItem
+                  key={campaign.id}
+                  id={campaign.id}
+                  master={campaign.gameMaster}
+                  title={campaign.name}
+                />
+              ))}
+            </section>
+          </>
+        )}
+      </>
     </Layout>
   );
 }

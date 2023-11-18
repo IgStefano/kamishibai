@@ -8,17 +8,12 @@ import { dosis } from "../../styles/fonts";
 import { classnames } from "../../utils/classnames";
 import { ModalContext } from "@/src/contexts/modal";
 import Link from "next/link";
+import type { LayoutProps } from "@components/layout";
 
-interface HeaderProps {
-  message?: string;
-  subHeading?: string;
-  addIcon?: boolean;
-  isLogged?: boolean;
-  mutation?: () => void;
-}
+type HeaderProps = Omit<LayoutProps, "children" | "className">;
 
 export default function Header({
-  message = "",
+  message = undefined,
   subHeading = "",
   addIcon = false,
   isLogged = false,
@@ -69,12 +64,15 @@ export default function Header({
           >
             {message}
           </h4>
-          {addIcon && setIsModalOpen && mutation && (
+          {addIcon && setIsModalOpen && mutation && message && (
             <Icon
               onClick={() => {
                 setIsModalOpen(true);
                 setModalOptions({
-                  module: "quest",
+                  module:
+                    message === "Crie agora uma aventura para esta campanha!"
+                      ? "quest"
+                      : "campaign",
                   type: "new",
                   mutation,
                 });

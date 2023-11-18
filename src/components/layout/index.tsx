@@ -1,9 +1,12 @@
 import Header from "../header";
 
-interface LayoutProps {
+export interface LayoutProps {
   children?: JSX.Element[] | JSX.Element;
   className?: string;
-  message?: string;
+  message?:
+    | "Abra uma nova campanha e crie as aventuras do seu grupo!"
+    | "Entre para ver e criar aventuras"
+    | "Crie agora uma aventura para esta campanha!";
   subHeading?: string;
   addIcon?: boolean;
   isLogged?: boolean;
@@ -13,7 +16,7 @@ interface LayoutProps {
 export default function Layout({
   children,
   className = "",
-  message = "",
+  message = undefined,
   subHeading = "",
   addIcon = false,
   isLogged = false,
