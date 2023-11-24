@@ -42,6 +42,7 @@ Precisa de uma mãozinha? Entre em contato com o mestre do projeto, que mora na 
 O Kamishibai está na versão Beta (v. 0.1), e a diversão está só começando! Muitas funcionalidades incríveis estão no horizonte, como descrições para campanhas, imagens para jogadores, campanhas e aventuras, edição de perfil e criação de campanhas e aventuras privadas.
 
 ---
+# Kamishibai 📜
 
 Ever found yourself tired of those tabletop RPG platforms that seem more complicated than the campaign itself? Or when you're in the middle of a campaign, and no one's on the same page? We got that covered. Kamishibai is your quest tracker, your treasure map, all in a simple and friendly vibe.
 
