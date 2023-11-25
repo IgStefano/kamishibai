@@ -2,6 +2,8 @@ _English version available below_
 
 # Kamishibai 📜
 
+## Sumário 📑
+
 Você já se pegou cansado dessas plataformas de RPG de mesa que parecem mais complicadas do que a própria campanha? Ou quando você tá lá, no meio da campanha, e ninguém lembra o que tava fazendo? A gente resolveu isso. Kamishibai é o seu rastreador de quests, o seu mapa da mina, tudo numa vibe simples e amigável.
 E aquela vontade de criar suas próprias aventuras sem firula? Kamishibai é como um caderno em branco esperando suas histórias. Nada de excesso de recursos, só a liberdade de criar.
 
@@ -42,7 +44,8 @@ Precisa de uma mãozinha? Entre em contato com o mestre do projeto, que mora na 
 O Kamishibai está na versão Beta (v. 0.1), e a diversão está só começando! Muitas funcionalidades incríveis estão no horizonte, como descrições para campanhas, imagens para jogadores, campanhas e aventuras, edição de perfil e criação de campanhas e aventuras privadas.
 
 ---
-# Kamishibai 📜
+
+## Summary 📑
 
 Ever found yourself tired of those tabletop RPG platforms that seem more complicated than the campaign itself? Or when you're in the middle of a campaign, and no one's on the same page? We got that covered. Kamishibai is your quest tracker, your treasure map, all in a simple and friendly vibe.
 
