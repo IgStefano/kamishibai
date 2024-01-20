@@ -88,7 +88,7 @@ export default function Description({ quest, openQuests }: DescriptionProps) {
         key={title + index.toString()}
         className={classnames("text-xs italic text-gray-900")}
       >
-        <span className="font-bold not-italic">{title}:</span> {text}
+        <strong className="not-italic">{title}:</strong> {text}
       </p>
     );
   };
@@ -96,8 +96,10 @@ export default function Description({ quest, openQuests }: DescriptionProps) {
   return (
     <div
       className={classnames(
-        "flex flex-col gap-4 transition-all duration-500",
-        !isOpen ? "pointer-events-none max-h-0 opacity-0" : "mt-4 max-h-screen"
+        "flex flex-col gap-4 transition-all duration-500 [&_*]:transition-all [&_*]:duration-500",
+        !isOpen
+          ? "pointer-events-none max-h-0 opacity-0 [&_*]:invisible [&_*]:max-h-0 [&_*]:p-0"
+          : "mt-4 max-h-screen [&_*]:max-h-screen"
       )}
     >
       <div className="flex flex-col gap-2">
