@@ -115,7 +115,7 @@ export default function Activity({
               : "pointer-events-none -translate-x-12 opacity-0",
             popUpOrientation === "vertical"
               ? "translate-y-24 flex-col"
-              : "translate-y-12"
+              : "-translate-y-9"
           )}
         >
           <Option
