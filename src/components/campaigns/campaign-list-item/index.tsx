@@ -6,6 +6,7 @@ import { api } from "@utils/api";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useContext } from "react";
+import S from "./styles";
 
 interface CampaignListItemProps {
   id: string;
@@ -26,52 +27,49 @@ export default function CampaignListItem({
   isEditable = false,
 }: CampaignListItemProps) {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const { isModalOpen, setIsModalOpen, setModalOptions, modalOptions } =
     useContext(ModalContext);
-  const campaign = api.campaign.getCampaignById.useQuery({ id }).data;
-  const queryClient = useQueryClient();
+
+  const campaign = api.campaign.getCampaignById.useQuery({ id });
+
+  const { data } = campaign;
+
   const mutation = api.campaign.editCampaign.useMutation({
     onSuccess: () =>
       queryClient.invalidateQueries().then(() => setIsModalOpen(false)),
   });
+
   const handleEditCampaign = () => {
-    if (campaign)
+    if (campaign && data)
       mutation.mutate({
-        campaignId: campaign.id,
+        campaignId: id,
         campaignName:
           (document.getElementById("campaignName") as HTMLInputElement)
             ?.value || title,
-        gameMaster: campaign.gameMaster,
+        gameMaster: data.gameMaster,
       });
   };
 
   useModalStatus({ mutation, modalOptions, isModalOpen, setModalOptions });
 
   return (
-    <li className="relative flex w-full cursor-pointer gap-4 rounded-3xl bg-lightYellow px-4 py-1 drop-shadow-default">
-      <div
-        className={`h-8 w-8 rounded-full bg-gray-400`}
-        onClick={() => void router.push(`/campaigns/${id}`)}
-      >
+    <S.Container>
+      <S.ImageContainer onClick={() => void router.push(`/campaigns/${id}`)}>
         {image?.url && (
           <Image
             src={image.url}
             alt={image.alt}
             width={32}
             height={32}
-            className={`${!image ? "bg-gray-400" : ""} rounded-full`}
+            className="rounded-full"
           />
         )}
-      </div>
-      <div
-        className="flex w-full flex-col gap-1"
-        onClick={() => void router.push(`/campaigns/${id}`)}
-      >
-        <p className="w-full overflow-hidden text-ellipsis whitespace-pre text-xs italic text-burgundy-500">
-          {title}
-        </p>
-        <p className="text-[0.5rem] italic text-gray-600">{master}</p>
-      </div>
+      </S.ImageContainer>
+      <S.TextContainer onClick={() => void router.push(`/campaigns/${id}`)}>
+        <S.Title>{title}</S.Title>
+        <S.GameMaster>{master}</S.GameMaster>
+      </S.TextContainer>
       {master && isEditable && (
         <Icon
           onClick={() => {
@@ -87,6 +85,6 @@ export default function CampaignListItem({
           className="absolute right-2 top-2 z-10 cursor-pointer text-burgundy"
         />
       )}
-    </li>
+    </S.Container>
   );
 }
