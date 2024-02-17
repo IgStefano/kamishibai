@@ -6,7 +6,7 @@ import { api } from "@utils/api";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useContext } from "react";
-import S from "./styles";
+import { S } from "./styles";
 
 interface CampaignListItemProps {
   id: string;
