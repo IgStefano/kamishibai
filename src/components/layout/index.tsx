@@ -1,4 +1,4 @@
-import Header from "../header";
+import Header from "./header";
 
 export interface LayoutProps {
   children?: JSX.Element[] | JSX.Element;

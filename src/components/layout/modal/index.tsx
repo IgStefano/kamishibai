@@ -4,7 +4,7 @@ import useOutsideClickRef from "@/src/hooks/useOutsideClickRef";
 import { LTCarpet } from "@pages/_app";
 import { useContext } from "react";
 import { classnames } from "../../../utils/classnames";
-import Button from "../../button";
+import Button from "../../ui/button";
 import { ModalContext } from "@/src/contexts/modal";
 import CampaignModule from "./campaign-module";
 import QuestModule from "./quest-module";
@@ -37,7 +37,7 @@ export default function Modal() {
     <section
       role="dialog"
       className={classnames(
-        "absolute top-0 right-0 flex h-full w-full items-center justify-center bg-[#000] bg-opacity-80 transition-all duration-300",
+        "absolute right-0 top-0 flex h-full w-full items-center justify-center bg-[#000] bg-opacity-80 transition-all duration-300",
         !isModalOpen ? "pointer-events-none opacity-0" : ""
       )}
     >
