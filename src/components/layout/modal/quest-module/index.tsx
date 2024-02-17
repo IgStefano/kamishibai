@@ -9,7 +9,7 @@ import { getActivityStatus } from "@/src/types/shared.types";
 import type { Quest } from "@/src/types/shared.types";
 import { ModalContext } from "@/src/contexts/modal";
 import { QuestFormContext } from "@/src/contexts/questForm";
-import ActivityInput from "@components/form/activityInput";
+import ActivityInput from "@components/form/activity-input";
 
 interface QuestModalProps {
   type: "new" | "edit";

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import QuestListItem from "@components/campaigns/quest-list-item";
+import QuestListItem from "@components/quest-list-item";
 import Layout from "@components/layout";
 import type { IncomingMessage, ServerResponse } from "http";
 import { useContext, useEffect, useRef, useState } from "react";

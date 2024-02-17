@@ -1,7 +1,7 @@
 import type { IncomingMessage, ServerResponse } from "http";
 import { type NextPage } from "next";
 import Layout from "../components/layout";
-import Spinner from "../components/layout/spinner";
+import Spinner from "../components/ui/spinner";
 import { getServerAuthSession } from "../server/auth";
 
 const Home: NextPage = () => {

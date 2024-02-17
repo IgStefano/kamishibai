@@ -1,7 +1,7 @@
 import type { IncomingMessage, ServerResponse } from "http";
 import { useContext } from "react";
-import CampaignListItem from "../../components/campaigns/campaign-list-item";
-import Divider from "../../components/divider";
+import CampaignListItem from "../../components/campaign-list-item";
+import Divider from "../../components/ui/divider";
 import Layout from "../../components/layout";
 import { getServerAuthSession } from "../../server/auth";
 import { dosis } from "../../styles/fonts";

@@ -2,7 +2,7 @@ import type { IncomingMessage, ServerResponse } from "http";
 import type { InferGetServerSidePropsType } from "next";
 import { signIn } from "next-auth/react";
 
-import Button from "../../components/button";
+import Button from "../../components/ui/button";
 import Layout from "../../components/layout";
 import { getServerAuthSession } from "../../server/auth";
 
