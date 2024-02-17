@@ -1,4 +1,5 @@
 import type { ComponentType, HTMLAttributes, ReactNode } from "react";
+import { twMerge } from "tailwind-merge";
 
 type GenericStyle = {
   children: ReactNode | ReactNode[];
@@ -8,17 +9,19 @@ interface StylizeProps {
   className: string;
 }
 
-type styledProps = HTMLAttributes<unknown> & GenericStyle;
+type StyledComponentProps = HTMLAttributes<unknown> & GenericStyle;
 
 export function styled(
   Tag: keyof JSX.IntrinsicElements,
   defaultStyles: StylizeProps
 ) {
-  return function stylize(props: styledProps) {
-    const { children, ...rest } = props;
+  return function stylize(props: StyledComponentProps) {
+    const { children, className, ...rest } = props;
+
+    const classNames = twMerge(defaultStyles.className, className);
 
     return (
-      <Tag className={defaultStyles.className} {...rest}>
+      <Tag className={classNames} {...rest}>
         {children}
       </Tag>
     );
