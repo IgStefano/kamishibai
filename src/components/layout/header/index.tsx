@@ -1,14 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { Icon } from "@iconify/react";
-import { LTCarpet } from "@pages/_app";
 import { signOut } from "next-auth/react";
 import { useContext } from "react";
-import { dosis } from "../../../styles/fonts";
-import { classnames } from "../../../utils/classnames";
 import { ModalContext } from "@/src/contexts/modal";
 import Link from "next/link";
 import type { LayoutProps } from "@components/layout";
+import { S, props } from "./styles";
 
 type HeaderProps = Omit<LayoutProps, "children" | "className">;
 
@@ -21,49 +19,19 @@ export default function Header({
 }: HeaderProps) {
   const { setIsModalOpen, setModalOptions } = useContext(ModalContext);
   return (
-    <header className="flex flex-col gap-4">
-      <div className="flex items-center justify-between">
+    <S.Header>
+      <S.LinkContainer className={props.LinkContainer({ isLogged })}>
         <Link href={"/"}>
-          <h1
-            className={classnames(
-              "w-full text-4xl font-medium text-burgundy",
-              !isLogged ? "text-center" : "",
-              LTCarpet.className
-            )}
-          >
-            Kamishibai
-          </h1>
+          <S.Title>Kamishibai</S.Title>
         </Link>
         {isLogged && (
-          <span
-            onClick={() => void signOut()}
-            className="cursor-pointer font-bold text-gray-700 transition-all duration-300 hover:text-burgundy-700"
-          >
-            Deslogar
-          </span>
+          <S.LogoutText onClick={() => void signOut()}>Deslogar</S.LogoutText>
         )}
-      </div>
-      {subHeading && (
-        <h2
-          className={classnames(
-            "w-full text-2xl font-medium text-gray-500",
-            LTCarpet.className
-          )}
-        >
-          {subHeading}
-        </h2>
-      )}
+      </S.LinkContainer>
+      {subHeading && <S.SubHeading>{subHeading}</S.SubHeading>}
       {addIcon && message && (
-        <div className="flex justify-between gap-2">
-          <h4
-            className={classnames(
-              `w-full text-base text-gray-500`,
-              dosis.className,
-              !addIcon ? "text-center font-medium" : ""
-            )}
-          >
-            {message}
-          </h4>
+        <S.AddNewMessageContainer>
+          <S.AddNewMessageHeading>{message}</S.AddNewMessageHeading>
           {addIcon && setIsModalOpen && mutation && message && (
             <Icon
               onClick={() => {
@@ -82,8 +50,8 @@ export default function Header({
               icon="ph:plus-circle"
             />
           )}
-        </div>
+        </S.AddNewMessageContainer>
       )}
-    </header>
+    </S.Header>
   );
 }
