@@ -95,7 +95,7 @@ export const campaignRouter = createTRPCRouter({
 
   // create procedure to list campaigns, with pagination
   getCampaigns: protectedProcedure
-    .input(z.object({ page: z.number().default(1) }))
+    .input(z.object({ page: z.number().default(1), userId: z.string() }))
     .query(async ({ ctx, input }) => {
       const rawCampaigns = await ctx.prisma.campaign.findMany({
         where: {
@@ -117,9 +117,11 @@ export const campaignRouter = createTRPCRouter({
 
       const mappedCampaigns = rawCampaigns.map((campaign, index) => {
         const gameMaster = gameMasters[index];
+        const editable = gameMaster ? gameMaster.id === input.userId : false;
         return {
           ...campaign,
           gameMaster: gameMaster ? gameMaster.name : "",
+          editable,
         };
       });
 

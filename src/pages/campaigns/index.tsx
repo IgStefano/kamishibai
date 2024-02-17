@@ -8,12 +8,15 @@ import { dosis } from "../../styles/fonts";
 import { api } from "@utils/api";
 import { ModalContext } from "@/src/contexts/modal";
 import { useQueryClient } from "@tanstack/react-query";
-import useModalState from "@/src/hooks/useModalState";
+import useModalStatus from "@/src/hooks/useModalStatus";
 
 export default function Campaigns() {
   const { setIsModalOpen, isModalOpen, setModalOptions, modalOptions } =
     useContext(ModalContext);
-  const campaigns = api.campaign.getCampaigns.useQuery({});
+  const userSession = api.user.getSession.useQuery().data;
+  const campaigns = api.campaign.getCampaigns.useQuery({
+    userId: userSession ? userSession.id : "",
+  });
   const { data, isSuccess } = campaigns;
   const queryClient = useQueryClient();
   const mutation = api.campaign.newCampaign.useMutation({
@@ -28,7 +31,7 @@ export default function Campaigns() {
     mutation.mutate({ campaignName });
   };
 
-  useModalState({ mutation, modalOptions, isModalOpen, setModalOptions });
+  useModalStatus({ mutation, modalOptions, isModalOpen, setModalOptions });
 
   return (
     <Layout
@@ -53,6 +56,7 @@ export default function Campaigns() {
                   id={campaign.id}
                   master={campaign.gameMaster}
                   title={campaign.name}
+                  isEditable={campaign.editable}
                 />
               ))}
             </section>

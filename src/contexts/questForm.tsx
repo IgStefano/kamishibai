@@ -2,7 +2,7 @@ import type { ActivityClient } from "@components/form/checkbox/checkbox-wrapper"
 import type { Dispatch, ReactNode } from "react";
 import { createContext, useReducer } from "react";
 
-interface QuestForm {
+export interface QuestForm {
   questName: string;
   startDate: Date;
   mainObjective: string;

@@ -67,7 +67,7 @@ export default function Activity({
   }, [currentActivity]);
 
   return (
-    <motion.li
+    <motion.div
       key={id || activityName}
       className="flex w-full items-center justify-between transition-all duration-300"
       initial={{ opacity: 0 }}
@@ -203,6 +203,6 @@ export default function Activity({
           className="cursor-pointer text-burgundy-400"
         />
       )}
-    </motion.li>
+    </motion.div>
   );
 }

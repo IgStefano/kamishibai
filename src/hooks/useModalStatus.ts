@@ -2,7 +2,7 @@ import type { Dispatch, SetStateAction } from "react";
 import { useEffect } from "react";
 import type { ModalOptions } from "../contexts/modal";
 
-interface useModalStateProps {
+interface useModalStatusProps {
   mutation: {
     isError: boolean;
     isIdle: boolean;
@@ -15,25 +15,25 @@ interface useModalStateProps {
   modalOptions: ModalOptions;
 }
 
-export default function useModalState({
+export default function useModalStatus({
   mutation,
   isModalOpen,
   setModalOptions,
   modalOptions,
-}: useModalStateProps) {
+}: useModalStatusProps) {
   useEffect(() => {
     if (isModalOpen) {
       if (mutation.isError) {
-        setModalOptions({ ...modalOptions, state: "isError" });
+        setModalOptions({ ...modalOptions, status: "isError" });
       }
       if (mutation.isIdle) {
-        setModalOptions({ ...modalOptions, state: "isIdle" });
+        setModalOptions({ ...modalOptions, status: "isIdle" });
       }
       if (mutation.isLoading) {
-        setModalOptions({ ...modalOptions, state: "isLoading" });
+        setModalOptions({ ...modalOptions, status: "isLoading" });
       }
       if (mutation.isSuccess) {
-        setModalOptions({ ...modalOptions, state: "isSuccess" });
+        setModalOptions({ ...modalOptions, status: "isSuccess" });
       }
     }
   }, [

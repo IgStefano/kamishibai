@@ -13,6 +13,7 @@ interface QuestAPIResponse extends Quest {
 interface CampaignAPIResponse extends Campaign {
   quests?: Quest[];
   players?: Player[];
+  editable?: boolean;
 }
 
 export const campaignMapper = (campaign: CampaignAPIResponse) => {
@@ -27,6 +28,7 @@ export const campaignMapper = (campaign: CampaignAPIResponse) => {
     gameMaster: campaign.gameMaster,
     status: campaign.status,
     image: campaign.image || undefined,
+    editable: campaign?.editable || undefined,
   };
 
   if (optionalFields.quests || optionalFields.players)

@@ -9,6 +9,7 @@ import { getActivityStatus } from "@/src/types/shared.types";
 import type { Quest } from "@/src/types/shared.types";
 import { ModalContext } from "@/src/contexts/modal";
 import { QuestFormContext } from "@/src/contexts/questForm";
+import ActivityInput from "@components/form/activityInput";
 
 interface QuestModalProps {
   type: "new" | "edit";
@@ -38,6 +39,18 @@ export default function QuestModule({ type }: QuestModalProps) {
       (Object.keys(populate.quest) as (keyof typeof populate.quest)[]).map(
         (key) => {
           if (key === "activities") {
+            setFormActivities(
+              (populate.quest as typeof populate.quest).activities.map(
+                (activity) => {
+                  return {
+                    id: activity.id,
+                    activityName: activity.name,
+                    activityStatus: getActivityStatus(activity.status),
+                    questId: activity.questId,
+                  };
+                }
+              )
+            );
             return (
               populate.quest &&
               dispatch({
@@ -67,7 +80,7 @@ export default function QuestModule({ type }: QuestModalProps) {
         }
       );
     }
-  }, []);
+  }, [populate]);
 
   return (
     <form id={id} className="flex flex-col gap-4">
@@ -80,9 +93,8 @@ export default function QuestModule({ type }: QuestModalProps) {
       <Input label="Data de Início" name="startDate" required type="date" />
       <Input label="Objetivo" name="mainObjective" required maxLength={64} />
       <div id="activities">
-        <Input
+        <ActivityInput
           label="Atividades"
-          name=""
           addNew
           placeholder="Adicionar mais uma atividade"
           maxLength={64}

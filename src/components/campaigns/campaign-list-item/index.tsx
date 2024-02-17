@@ -1,5 +1,5 @@
 import { ModalContext } from "@/src/contexts/modal";
-import useModalState from "@/src/hooks/useModalState";
+import useModalStatus from "@/src/hooks/useModalStatus";
 import { Icon } from "@iconify/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { api } from "@utils/api";
@@ -15,6 +15,7 @@ interface CampaignListItemProps {
     url: string;
     alt: string;
   };
+  isEditable?: boolean;
 }
 
 export default function CampaignListItem({
@@ -22,6 +23,7 @@ export default function CampaignListItem({
   title,
   master,
   image = undefined,
+  isEditable = false,
 }: CampaignListItemProps) {
   const router = useRouter();
   const { isModalOpen, setIsModalOpen, setModalOptions, modalOptions } =
@@ -43,10 +45,10 @@ export default function CampaignListItem({
       });
   };
 
-  useModalState({ mutation, modalOptions, isModalOpen, setModalOptions });
+  useModalStatus({ mutation, modalOptions, isModalOpen, setModalOptions });
 
   return (
-    <li className="relative flex w-full cursor-pointer gap-4 rounded-3xl bg-lightYellow py-1 px-4 drop-shadow-default">
+    <li className="relative flex w-full cursor-pointer gap-4 rounded-3xl bg-lightYellow px-4 py-1 drop-shadow-default">
       <div
         className={`h-8 w-8 rounded-full bg-gray-400`}
         onClick={() => void router.push(`/campaigns/${id}`)}
@@ -70,7 +72,7 @@ export default function CampaignListItem({
         </p>
         <p className="text-[0.5rem] italic text-gray-600">{master}</p>
       </div>
-      {master && (
+      {master && isEditable && (
         <Icon
           onClick={() => {
             setModalOptions({
@@ -82,7 +84,7 @@ export default function CampaignListItem({
             setIsModalOpen(true);
           }}
           icon="ph:pencil-simple"
-          className="absolute top-2 right-2 z-10 cursor-pointer text-burgundy"
+          className="absolute right-2 top-2 z-10 cursor-pointer text-burgundy"
         />
       )}
     </li>

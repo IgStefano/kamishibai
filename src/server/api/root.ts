@@ -1,5 +1,6 @@
 import { campaignRouter } from "./routers/campaigns";
 import { questRouter } from "./routers/quests";
+import { userRouter } from "./routers/users";
 import { createTRPCRouter } from "./trpc";
 
 /**
@@ -10,6 +11,7 @@ import { createTRPCRouter } from "./trpc";
 export const appRouter = createTRPCRouter({
   campaign: campaignRouter,
   quest: questRouter,
+  user: userRouter,
 });
 
 // export type definition of API

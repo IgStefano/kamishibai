@@ -8,9 +8,9 @@ import { api } from "@utils/api";
 import { useRouter } from "next/router";
 import { ModalContext } from "@/src/contexts/modal";
 import { QuestFormContext } from "@/src/contexts/questForm";
-import useModalState from "@/src/hooks/useModalState";
 import { useQueryClient } from "@tanstack/react-query";
 import { prisma } from "../../../server/db";
+import useModalStatus from "@/src/hooks/useModalStatus";
 
 interface CampaignQuestsProps {
   isGameMaster: boolean;
@@ -74,7 +74,7 @@ export default function CampaignQuests({ isGameMaster }: CampaignQuestsProps) {
     mutation.mutate(mutator);
   };
 
-  useModalState({ mutation, modalOptions, isModalOpen, setModalOptions });
+  useModalStatus({ mutation, modalOptions, isModalOpen, setModalOptions });
 
   useEffect(() => {
     stateRef.current = state;

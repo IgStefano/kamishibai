@@ -1,8 +1,6 @@
-import { Icon } from "@iconify/react";
 import { classnames } from "@utils/classnames";
 import type { ComponentPropsWithoutRef, Dispatch, SetStateAction } from "react";
-import { useContext, useState } from "react";
-import type { ActivityClient } from "../checkbox/checkbox-wrapper";
+import { useContext } from "react";
 import { QuestFormContext } from "@/src/contexts/questForm";
 
 interface InputProps extends ComponentPropsWithoutRef<"input"> {
@@ -13,8 +11,6 @@ interface InputProps extends ComponentPropsWithoutRef<"input"> {
   addNew?: boolean;
   placeholder?: string;
   hidden?: boolean;
-  activities?: ActivityClient[];
-  setActivities?: Dispatch<SetStateAction<ActivityClient[]>>;
   setPopulate?: Dispatch<SetStateAction<string>>;
 }
 
@@ -26,8 +22,6 @@ export default function Input({
   addNew = false,
   placeholder = "",
   hidden = false,
-  activities,
-  setActivities,
   setPopulate = undefined,
   ...rest
 }: InputProps) {
@@ -36,34 +30,6 @@ export default function Input({
   const fieldName = (Object.keys(state) as (keyof typeof state)[]).find(
     (key) => key === name
   ) as keyof typeof state;
-  const [value, setValue] = useState(
-    fieldName && typeof state[fieldName] === "string" ? state[fieldName] : ""
-  );
-
-  const [lengthError, setLengthError] = useState(false);
-  const handleAddActivity = () => {
-    if (typeof value === "string" && value.length < 5) {
-      setLengthError(true);
-      return;
-    }
-    setLengthError(false);
-
-    if (setActivities && activities) {
-      setActivities([
-        ...activities,
-        {
-          activityName: typeof value === "string" ? value : "",
-          activityStatus: "not_started",
-        },
-      ]);
-      setValue("");
-      dispatch({
-        fieldName: name,
-        payload: "",
-        type: "field",
-      });
-    }
-  };
 
   return (
     <div className={classnames(hidden ? "hidden" : "flex w-full flex-col")}>
@@ -78,7 +44,6 @@ export default function Input({
           name={name}
           id={name}
           onChange={(e) => {
-            setValue(e.target.value);
             dispatch({
               fieldName: name,
               payload: e.target.value,
@@ -94,25 +59,8 @@ export default function Input({
               : state[fieldName]
           }
           placeholder={placeholder}
-          onKeyDown={(e) => {
-            e.key === "Enter" && addNew && handleAddActivity();
-          }}
           {...rest}
         />
-        {addNew && setActivities && activities && (
-          <>
-            <Icon
-              onClick={() => handleAddActivity()}
-              icon="ph:plus"
-              className="absolute right-2 top-2 cursor-pointer text-burgundy-400"
-            />
-            {lengthError && (
-              <p className="mt-1 text-xs text-burgundy-300">
-                A atividade precisa ter ao menos 5 caracteres.
-              </p>
-            )}
-          </>
-        )}
       </div>
     </div>
   );

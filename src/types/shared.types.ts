@@ -23,6 +23,7 @@ const Campaign = z.object({
   name: z.string(),
   image: z.string().url().optional(),
   status: z.number().min(0).max(1),
+  editable: z.boolean().optional(),
 });
 
 const Quest = z.object({

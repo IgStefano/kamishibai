@@ -12,8 +12,8 @@ import { useRouter } from "next/router";
 import { api } from "@utils/api";
 import { ModalContext } from "@/src/contexts/modal";
 import { QuestFormContext } from "@/src/contexts/questForm";
-import useModalState from "@/src/hooks/useModalState";
 import { useQueryClient } from "@tanstack/react-query";
+import useModalStatus from "@/src/hooks/useModalStatus";
 
 interface QuestListItemProps {
   quest: Quest;
@@ -59,7 +59,7 @@ export default function QuestListItem({
         campaignId: campaign.id,
         questName,
         mainObjective,
-        startDate: new Date(startDate),
+        startDate,
         activities,
         isVisible: true,
       };
@@ -80,24 +80,22 @@ export default function QuestListItem({
     }
   };
 
-  useModalState({ mutation, modalOptions, isModalOpen, setModalOptions });
+  useModalStatus({ mutation, modalOptions, isModalOpen, setModalOptions });
 
   useEffect(() => {
     stateRef.current = state;
   }, [state]);
 
   return (
-    <>
-      <li>
-        <TitleCard
-          quest={quest}
-          setOpenQuests={setOpenQuests}
-          openQuests={openQuests}
-          editable
-          mutation={handleEditQuest}
-        />
-        <Description quest={quest} openQuests={openQuests} />
-      </li>
-    </>
+    <li>
+      <TitleCard
+        quest={quest}
+        setOpenQuests={setOpenQuests}
+        openQuests={openQuests}
+        editable
+        mutation={handleEditQuest}
+      />
+      <Description quest={quest} openQuests={openQuests} />
+    </li>
   );
 }

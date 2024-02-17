@@ -10,7 +10,7 @@ export type ModalOptions = {
     campaign?: { name: Campaign["name"] };
     quest?: Quest;
   };
-  state?: "isSuccess" | "isLoading" | "isError" | "isIdle";
+  status?: "isSuccess" | "isLoading" | "isError" | "isIdle";
 };
 
 interface ModalContextProps {
@@ -28,7 +28,7 @@ export const ModalContext = createContext<ModalContextProps>({
     type: "new",
     mutation: () => null,
     populate: undefined,
-    state: "isIdle",
+    status: "isIdle",
   },
   setModalOptions: () => null,
 });
@@ -44,7 +44,7 @@ export function ModalProvider({
     type: "new",
     mutation: () => null,
     populate: undefined,
-    state: "isIdle",
+    status: "isIdle",
   });
 
   return (

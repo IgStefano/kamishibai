@@ -13,7 +13,7 @@ export default function Modal() {
   const { isModalOpen, setIsModalOpen, modalOptions } =
     useContext(ModalContext);
   const modalRef = useOutsideClickRef({ setIsOpen: setIsModalOpen });
-  const { module, type, mutation, state } = modalOptions;
+  const { module, type, mutation, status } = modalOptions;
 
   const content = {
     campaign: <CampaignModule />,
@@ -60,9 +60,9 @@ export default function Modal() {
         <Button
           label={label[type].button}
           onClick={mutation}
-          disabled={state === "isLoading"}
+          disabled={status === "isLoading"}
         />
-        {state === "isError" && (
+        {status === "isError" && (
           <p className="text-center text-sm font-bold text-burgundy-300">
             Encontramos um erro ao tentar {label[type].error}. Por favor, tente
             novamente mais tarde.
