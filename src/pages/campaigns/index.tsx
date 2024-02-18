@@ -13,11 +13,10 @@ import useModalStatus from "@/src/hooks/useModalStatus";
 export default function Campaigns() {
   const { setIsModalOpen, isModalOpen, setModalOptions, modalOptions } =
     useContext(ModalContext);
-  const userSession = api.user.getSession.useQuery().data;
-  const campaigns = api.campaign.getCampaigns.useQuery({
-    userId: userSession ? userSession.id : "",
-  });
+  const campaigns = api.campaign.getCampaigns.useQuery({});
+
   const { data, isSuccess } = campaigns;
+
   const queryClient = useQueryClient();
   const mutation = api.campaign.newCampaign.useMutation({
     onSuccess: () =>
