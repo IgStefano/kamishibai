@@ -14,7 +14,6 @@ export default function Campaigns() {
   const { setIsModalOpen, isModalOpen, setModalOptions, modalOptions } =
     useContext(ModalContext);
   const campaigns = api.campaign.getCampaigns.useQuery({});
-
   const { data, isSuccess } = campaigns;
 
   const queryClient = useQueryClient();

@@ -156,13 +156,16 @@ export const campaignRouter = createTRPCRouter({
       const gameMaster = await ctx.prisma.user.findFirst({
         where: {
           id: {
-            equals: ctx.session.user.id,
+            equals: rawCampaign.gameMaster,
           },
         },
       });
 
       if (rawCampaign != null && gameMaster?.name != null)
         rawCampaign.gameMaster = gameMaster?.name;
+      Object.assign(rawCampaign, {
+        editable: ctx.session.user.id === gameMaster?.id,
+      });
 
       return campaignMapper(rawCampaign);
     }),

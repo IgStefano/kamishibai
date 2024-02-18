@@ -9,7 +9,6 @@ import { useRouter } from "next/router";
 import { ModalContext } from "@/src/contexts/modal";
 import { QuestFormContext } from "@/src/contexts/questForm";
 import { useQueryClient } from "@tanstack/react-query";
-import { prisma } from "../../../server/db";
 import useModalStatus from "@/src/hooks/useModalStatus";
 
 interface CampaignQuestsProps {
@@ -26,6 +25,7 @@ export default function CampaignQuests({ isGameMaster }: CampaignQuestsProps) {
   const campaign = api.campaign.getCampaignById.useQuery({
     id: router.query.id as string,
   })?.data;
+
   const queryClient = useQueryClient();
   const mutation = api.quest.newQuest.useMutation({
     onSuccess: () =>
@@ -95,6 +95,7 @@ export default function CampaignQuests({ isGameMaster }: CampaignQuestsProps) {
             quest={quest}
             openQuests={openQuests}
             setOpenQuests={setOpenQuests}
+            isEditable={campaign?.editable}
           />
         ))}
       </ul>
@@ -116,17 +117,7 @@ export async function getServerSideProps(ctx: {
     };
   }
 
-  const campaign = await prisma?.campaign.findFirst({
-    where: {
-      id: {
-        equals: ctx.query.id,
-      },
-    },
-  });
-
-  const isGameMaster = session.user?.id === campaign?.gameMaster;
-
   return {
-    props: { isGameMaster },
+    props: { session },
   };
 }

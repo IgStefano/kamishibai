@@ -29,6 +29,7 @@ export function styled<T extends keyof NonSVGIntrinsicElements>(
 ) {
   return function stylize(props: StyledComponentProps<T>) {
     const { children, className, ...rest } = props;
+
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
     const Component = Tag as any;
     const classNames = twMerge(defaultStyles.className, className || "");

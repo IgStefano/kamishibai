@@ -19,12 +19,14 @@ interface QuestListItemProps {
   quest: Quest;
   openQuests: string[];
   setOpenQuests: Dispatch<SetStateAction<string[]>>;
+  isEditable?: boolean;
 }
 
 export default function QuestListItem({
   quest,
   openQuests,
   setOpenQuests,
+  isEditable = false,
 }: QuestListItemProps) {
   const { isModalOpen, setIsModalOpen, modalOptions, setModalOptions } =
     useContext(ModalContext);
@@ -92,7 +94,7 @@ export default function QuestListItem({
         quest={quest}
         setOpenQuests={setOpenQuests}
         openQuests={openQuests}
-        editable
+        editable={isEditable}
         mutation={handleEditQuest}
       />
       <Description quest={quest} openQuests={openQuests} />
