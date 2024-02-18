@@ -1,7 +1,7 @@
 import type { ComponentType, HTMLAttributes, ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
 
-type GenericStyle = {
+type Children = {
   children: ReactNode | ReactNode[];
 };
 
@@ -9,31 +9,44 @@ interface StylizeProps {
   className: string;
 }
 
-type StyledComponentProps = HTMLAttributes<unknown> & GenericStyle;
+type NonSVGIntrinsicElements = {
+  [K in keyof JSX.IntrinsicElements as K extends "svg"
+    ? never
+    : K extends "symbol"
+    ? never
+    : K]: JSX.IntrinsicElements[K];
+};
 
-export function styled(
-  Tag: keyof JSX.IntrinsicElements,
+type StyledComponentProps<T extends keyof NonSVGIntrinsicElements> =
+  HTMLAttributes<T> &
+    Children & {
+      ref?: unknown;
+    };
+
+export function styled<T extends keyof NonSVGIntrinsicElements>(
+  Tag: T,
   defaultStyles: StylizeProps
 ) {
-  return function stylize(props: StyledComponentProps) {
+  return function stylize(props: StyledComponentProps<T>) {
     const { children, className, ...rest } = props;
-
-    const classNames = twMerge(defaultStyles.className, className);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
+    const Component = Tag as any;
+    const classNames = twMerge(defaultStyles.className, className || "");
 
     return (
-      <Tag className={classNames} {...rest}>
-        {children}
-      </Tag>
+      <Component className={classNames} {...rest}>
+        {children || ""}
+      </Component>
     );
   };
 }
 
-type StyledComponents<T extends Record<string, ComponentType<GenericStyle>>> = {
+type StyledComponents<T extends Record<string, ComponentType<Children>>> = {
   [K in keyof T]: T[K];
 };
 
-export function createStyles<
-  T extends Record<string, ComponentType<GenericStyle>>
->(components: T): StyledComponents<T> {
+export function createStyles<T extends Record<string, ComponentType<Children>>>(
+  components: T
+): StyledComponents<T> {
   return components as StyledComponents<T>;
 }
