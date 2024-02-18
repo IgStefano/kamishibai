@@ -1,13 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import useOutsideClickRef from "@/src/hooks/useOutsideClickRef";
-import { LTCarpet } from "@pages/_app";
 import { useContext } from "react";
-import { classnames } from "../../../utils/classnames";
 import Button from "../../ui/button";
 import { ModalContext } from "@/src/contexts/modal";
 import CampaignModule from "./campaign-module";
 import QuestModule from "./quest-module";
+import { S, props } from "./styles";
 
 export default function Modal() {
   const { isModalOpen, setIsModalOpen, modalOptions } =
@@ -34,41 +33,27 @@ export default function Modal() {
   };
 
   return (
-    <section
+    <S.ModalSection
       role="dialog"
-      className={classnames(
-        "absolute right-0 top-0 flex h-full w-full items-center justify-center bg-[#000] bg-opacity-80 transition-all duration-300",
-        !isModalOpen ? "pointer-events-none opacity-0" : ""
-      )}
+      className={props.ModalSection({ isModalOpen })}
     >
-      <div
-        ref={modalRef}
-        role="dialog"
-        className="relative flex max-h-[85vh] w-[40vw] flex-col items-center justify-center gap-4 rounded-lg bg-gray-50 p-6"
-      >
-        <h3
-          className={classnames(
-            LTCarpet.className,
-            "mx-2 w-full text-center text-4xl uppercase text-gray-500"
-          )}
-        >
-          {label[type].title}
-        </h3>
-        <div className="max-h-[60vh] w-full overflow-y-auto">
+      <S.ModalContainer ref={modalRef} role="dialog">
+        <S.ModalHeading>{label[type].title}</S.ModalHeading>
+        <S.ModalContent className="max-h-[60vh] w-full overflow-y-auto">
           {content[module]}
-        </div>
+        </S.ModalContent>
         <Button
           label={label[type].button}
           onClick={mutation}
           disabled={status === "isLoading"}
         />
         {status === "isError" && (
-          <p className="text-center text-sm font-bold text-burgundy-300">
+          <S.ModalErrorText>
             Encontramos um erro ao tentar {label[type].error}. Por favor, tente
             novamente mais tarde.
-          </p>
+          </S.ModalErrorText>
         )}
-      </div>
-    </section>
+      </S.ModalContainer>
+    </S.ModalSection>
   );
 }
