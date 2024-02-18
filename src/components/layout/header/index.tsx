@@ -31,7 +31,11 @@ export default function Header({
       {subHeading && <S.SubHeading>{subHeading}</S.SubHeading>}
       {addIcon && message && (
         <S.AddNewMessageContainer>
-          <S.AddNewMessageHeading>{message}</S.AddNewMessageHeading>
+          <S.AddNewMessageHeading
+            className={props.AddNewMessageHeading({ addIcon })}
+          >
+            {message}
+          </S.AddNewMessageHeading>
           {addIcon && setIsModalOpen && mutation && message && (
             <Icon
               onClick={() => {

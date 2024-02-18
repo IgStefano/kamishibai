@@ -31,10 +31,7 @@ export const S = createStyles({
     className: "flex justify-between gap-2",
   }),
   AddNewMessageHeading: styled("h4", {
-    className: twMerge([
-      "w-full text-base text-gray-500 text-center font-medium",
-      dosis.className,
-    ]),
+    className: twMerge(["w-full text-base text-gray-500", dosis.className]),
   }),
 });
 
@@ -44,6 +41,14 @@ export const props = {
       isLogged: {
         true: "",
         false: "justify-center",
+      },
+    },
+  }),
+  AddNewMessageHeading: cva("", {
+    variants: {
+      addIcon: {
+        true: "",
+        false: "text-center font-medium",
       },
     },
   }),
