@@ -1,9 +1,9 @@
 import { ModalContext } from "@/src/contexts/modal";
-import { notoSans } from "@/src/styles/fonts";
 import type { Quest } from "@/src/types/shared.types";
 import { Icon } from "@iconify/react";
 import { classnames } from "@utils/classnames";
 import { useContext, type Dispatch, type SetStateAction } from "react";
+import { S } from "./styles";
 
 interface TitleCardProps {
   quest: Quest;
@@ -34,27 +34,22 @@ export default function TitleCard({
   const getSubtitle = () => {
     if (recommendedLevel)
       return (
-        <p className="text-[8px] italic text-gray-50">
+        <S.RecommendedLevelText>
           <span className="not-italic">Nível recomendado:</span>{" "}
           {recommendedLevel}
-        </p>
+        </S.RecommendedLevelText>
       );
     if (description)
       return (
-        <p className="w-5/6 overflow-hidden text-ellipsis whitespace-nowrap text-[8px] italic text-gray-50">
+        <S.DescriptionText>
           <span className="not-italic">Descrição:</span> {description}
-        </p>
+        </S.DescriptionText>
       );
     return <></>;
   };
 
   return (
-    <div
-      className={classnames(
-        "relative flex w-full items-center rounded bg-burgundy-400 py-1 text-gray-50 drop-shadow-default",
-        notoSans.className
-      )}
-    >
+    <S.Container>
       <div
         className="p-4"
         onClick={() => (isOpen ? handleCloseQuest() : handleOpenQuest())}
@@ -68,14 +63,13 @@ export default function TitleCard({
         />
       </div>
 
-      <div className="flex w-full flex-col justify-center gap-1">
-        <h5 className={classnames("text-xs italic text-gray-50")}>{name}</h5>
+      <S.SubtitleContainer>
+        <h5 className="text-xs italic text-gray-50">{name}</h5>
         {getSubtitle()}
-      </div>
+      </S.SubtitleContainer>
 
       {editable && mutation && (
-        <div
-          className="absolute top-2 right-2 cursor-pointer"
+        <S.IconContainer
           onClick={() => {
             void setIsModalOpen(true);
             setModalOptions({
@@ -87,8 +81,8 @@ export default function TitleCard({
           }}
         >
           <Icon icon="ph:pencil-simple" className=" text-gray-50" />
-        </div>
+        </S.IconContainer>
       )}
-    </div>
+    </S.Container>
   );
 }
