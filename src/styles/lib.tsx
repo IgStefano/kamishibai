@@ -1,10 +1,11 @@
-import type {
-  ComponentType,
-  DetailedHTMLProps,
-  HTMLAttributes,
-  InputHTMLAttributes,
-  LabelHTMLAttributes,
-  ReactNode,
+import {
+  forwardRef,
+  type ComponentType,
+  type DetailedHTMLProps,
+  type HTMLAttributes,
+  type InputHTMLAttributes,
+  type LabelHTMLAttributes,
+  type ReactNode,
 } from "react";
 import { twMerge } from "tailwind-merge";
 
@@ -38,7 +39,10 @@ export function styled<T extends keyof NonSVGIntrinsicElements>(
   Tag: T,
   defaultStyles: StylizeProps
 ) {
-  return function stylize(props: StyledComponentProps<T>) {
+  return forwardRef<unknown, StyledComponentProps<T>>(function stylize(
+    props,
+    ref
+  ) {
     const { children, className, ...rest } = props;
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
@@ -46,11 +50,11 @@ export function styled<T extends keyof NonSVGIntrinsicElements>(
     const classNames = twMerge(defaultStyles.className, className || "");
 
     return (
-      <Component className={classNames} {...rest}>
+      <Component ref={ref} className={classNames} {...rest}>
         {children || ""}
       </Component>
     );
-  };
+  });
 }
 
 type StyledComponents<T extends Record<string, ComponentType<Children>>> = {
