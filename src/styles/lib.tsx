@@ -3,6 +3,7 @@ import type {
   DetailedHTMLProps,
   HTMLAttributes,
   InputHTMLAttributes,
+  LabelHTMLAttributes,
   ReactNode,
 } from "react";
 import { twMerge } from "tailwind-merge";
@@ -26,6 +27,8 @@ type NonSVGIntrinsicElements = {
 type StyledComponentProps<T extends keyof NonSVGIntrinsicElements> =
   (T extends "input"
     ? DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>
+    : T extends "label"
+    ? DetailedHTMLProps<LabelHTMLAttributes<HTMLLabelElement>, HTMLLabelElement>
     : HTMLAttributes<T>) &
     Children & {
       ref?: unknown;
