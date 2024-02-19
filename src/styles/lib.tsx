@@ -1,8 +1,14 @@
-import type { ComponentType, HTMLAttributes, ReactNode } from "react";
+import type {
+  ComponentType,
+  DetailedHTMLProps,
+  HTMLAttributes,
+  InputHTMLAttributes,
+  ReactNode,
+} from "react";
 import { twMerge } from "tailwind-merge";
 
 type Children = {
-  children: ReactNode | ReactNode[];
+  children?: ReactNode | ReactNode[];
 };
 
 interface StylizeProps {
@@ -18,7 +24,9 @@ type NonSVGIntrinsicElements = {
 };
 
 type StyledComponentProps<T extends keyof NonSVGIntrinsicElements> =
-  HTMLAttributes<T> &
+  (T extends "input"
+    ? DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>
+    : HTMLAttributes<T>) &
     Children & {
       ref?: unknown;
     };
