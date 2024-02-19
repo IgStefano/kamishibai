@@ -3,10 +3,9 @@ import type { Quest } from "@/src/types/shared.types";
 import { getActivityStatus } from "@/src/types/shared.types";
 import Activity from "@components/form/activity";
 import type { ActivityClient } from "@components/form/checkbox/checkbox-wrapper";
-import { api } from "@utils/api";
-import { classnames } from "@utils/classnames";
 import { formatDate } from "@utils/formatDate";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useState } from "react";
+import { S, props } from "./styles";
 
 type renderedItem = {
   name: string;
@@ -19,19 +18,8 @@ interface DescriptionProps {
 }
 
 export default function Description({ quest, openQuests }: DescriptionProps) {
-  const {
-    id,
-    activities,
-    recommendedLevel,
-    reward,
-    description,
-    startDate,
-    campaignId,
-  } = quest;
-
-  const activitiesMutation = api.quest.editQuestActivities.useMutation({
-    onSuccess: () => api.useContext().quest.invalidate(),
-  });
+  const { id, activities, recommendedLevel, reward, description, startDate } =
+    quest;
 
   const [formActivities, setFormActivities] = useState<ActivityClient[]>(
     activities.map((activity) => {
@@ -64,7 +52,7 @@ export default function Description({ quest, openQuests }: DescriptionProps) {
     return (
       <p
         key={title + index.toString()}
-        className={classnames("text-xs italic text-gray-900")}
+        className="text-xs italic text-gray-900"
       >
         <strong className="not-italic">{title}:</strong> {text}
       </p>
@@ -72,30 +60,17 @@ export default function Description({ quest, openQuests }: DescriptionProps) {
   };
 
   return (
-    <div
-      className={classnames(
-        "flex flex-col gap-4 transition-all duration-500 [&_*]:transition-all [&_*]:duration-500",
-        !isOpen
-          ? "pointer-events-none max-h-0 opacity-0 [&_*]:invisible [&_*]:max-h-0 [&_*]:p-0"
-          : "mt-4 max-h-screen [&_*]:max-h-screen"
-      )}
-    >
-      <div className="flex flex-col gap-2">
+    <S.Container className={props.Container({ isOpen })}>
+      <S.RenderedItemsContainer>
         {renderedItems.map((currentItem, index) => {
           if (!currentItem.content) return <Fragment key={index} />;
           return item(currentItem.name, currentItem.content, index);
         })}
-      </div>
-      <div
-        className={classnames(
-          "flex flex-col gap-2 rounded bg-gray-200 px-4 pt-2 pb-4 drop-shadow-default"
-        )}
-      >
-        <h6 className="text-center font-bold text-burgundy-400">
-          Registro de Atividades
-        </h6>
+      </S.RenderedItemsContainer>
+      <S.ActivityLogContainer>
+        <S.ActivityLogHeading>Registro de Atividades</S.ActivityLogHeading>
         <div className="flex flex-col gap-1">
-          <div className="flex flex-col gap-2">
+          <S.RenderedItemsContainer>
             {activities.map((activity) => (
               <Activity
                 key={activity.id}
@@ -109,9 +84,9 @@ export default function Description({ quest, openQuests }: DescriptionProps) {
                 popUpOrientation="horizontal"
               />
             ))}
-          </div>
+          </S.RenderedItemsContainer>
         </div>
-      </div>
-    </div>
+      </S.ActivityLogContainer>
+    </S.Container>
   );
 }
