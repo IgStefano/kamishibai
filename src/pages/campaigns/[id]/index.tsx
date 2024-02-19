@@ -11,11 +11,7 @@ import { QuestFormContext } from "@/src/contexts/questForm";
 import { useQueryClient } from "@tanstack/react-query";
 import useModalStatus from "@/src/hooks/useModalStatus";
 
-interface CampaignQuestsProps {
-  isGameMaster: boolean;
-}
-
-export default function CampaignQuests({ isGameMaster }: CampaignQuestsProps) {
+export default function CampaignQuests() {
   const { isModalOpen, setIsModalOpen, modalOptions, setModalOptions } =
     useContext(ModalContext);
   const { state } = useContext(QuestFormContext);
@@ -83,7 +79,7 @@ export default function CampaignQuests({ isGameMaster }: CampaignQuestsProps) {
   return (
     <Layout
       isLogged
-      addIcon={isGameMaster}
+      addIcon={campaign?.editable}
       message="Crie agora uma aventura para esta campanha!"
       subHeading={campaign?.name || ""}
       mutation={handleCreateQuest}
