@@ -39,9 +39,7 @@ export default function Modal() {
     >
       <S.ModalContainer ref={modalRef} role="dialog">
         <S.ModalHeading>{label[type].title}</S.ModalHeading>
-        <S.ModalContent className="max-h-[60vh] w-full overflow-y-auto">
-          {content[module]}
-        </S.ModalContent>
+        <S.ModalContent>{content[module]}</S.ModalContent>
         <Button
           label={label[type].button}
           onClick={mutation}
