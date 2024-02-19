@@ -1,8 +1,8 @@
 import { Icon } from "@iconify/react";
-import { classnames } from "@utils/classnames";
 import { useState } from "react";
 import type { CheckboxT } from "./checkbox-wrapper";
 import { motion } from "framer-motion";
+import { S, props } from "./styles";
 
 export default function Checkbox({
   id,
@@ -26,28 +26,16 @@ export default function Checkbox({
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
-      <div
-        className={classnames(
-          "flex w-fit items-center gap-1",
-          disabled ? "opacity-50" : "cursor-pointer"
-        )}
-      >
-        <input
+      <S.Container className={props.Container({ disabled })}>
+        <S.CheckboxInput
           id={id}
           checked={isChecked}
           onChange={() => !disabled && setIsChecked(!isChecked)}
-          className={classnames(
-            // prettier-ignore
-            "h-3 w-3 appearance-none bg-lightYellow-300 outline-none checked:relative checked:before:absolute checked:before:right-[1px] checked:before:top-[-5px] checked:before:text-sm checked:before:text-burgundy-700 checked:before:content-['\xb92713'] checked:before:bg-burgundy-900 ",
-            !disabled ? "cursor-pointer" : ""
-          )}
+          className={props.CheckboxInput({ disabled })}
           type="checkbox"
         />
-        <label
-          className={classnames(
-            "text-xs text-burgundy",
-            !disabled ? "cursor-pointer" : ""
-          )}
+        <S.CheckboxLabel
+          className={props.CheckboxInput({ disabled })}
           htmlFor={name}
         >
           <span
@@ -64,8 +52,8 @@ export default function Checkbox({
           >
             {currentLabel}
           </span>
-        </label>
-      </div>
+        </S.CheckboxLabel>
+      </S.Container>
       {deletable && setCheckboxes && checkboxes && (
         <Icon
           onClick={() => {
