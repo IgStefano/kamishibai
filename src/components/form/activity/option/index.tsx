@@ -29,7 +29,7 @@ export const optionStatus = {
     icon: "ph:x-bold",
     color: "text-lightYellow-900",
   },
-};
+} as const;
 
 export default function Option({
   value,
