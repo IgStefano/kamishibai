@@ -1,8 +1,8 @@
 import { Icon } from "@iconify/react";
-import { classnames } from "@utils/classnames";
 import type { ComponentPropsWithoutRef, Dispatch, SetStateAction } from "react";
 import { useState } from "react";
 import type { ActivityClient } from "../checkbox/checkbox-wrapper";
+import { S, props } from "./styles";
 
 interface InputProps extends ComponentPropsWithoutRef<"input"> {
   label: string;
@@ -51,15 +51,14 @@ export default function ActivityInput({
   };
 
   return (
-    <div className={classnames(hidden ? "hidden" : "flex w-full flex-col")}>
-      <label htmlFor="activities" className="pb-1 text-xs text-burgundy">
+    <div className={props.Container({ hidden })}>
+      <S.Label htmlFor="activities">
         {label} {required && " *"}
-      </label>
+      </S.Label>
       <div className="relative">
-        <input
+        <S.Input
           id="activities"
           name="activities"
-          className="w-full rounded border border-gray-50 bg-lightYellow p-2 text-xs transition-all duration-300 focus-visible:border-solid focus-visible:border-burgundy disabled:bg-gray-200 disabled:text-gray-900 disabled:opacity-80 "
           disabled={disabled}
           required={required && !addNew}
           onChange={(e) => {
