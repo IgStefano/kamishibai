@@ -1,4 +1,3 @@
-import { classnames } from "@utils/classnames";
 import type { ActivityClient } from "../checkbox/checkbox-wrapper";
 import { motion } from "framer-motion";
 import { Icon } from "@iconify/react";
@@ -13,6 +12,7 @@ import useOutsideClickRef from "@/src/hooks/useOutsideClickRef";
 import Option, { optionStatus } from "./option";
 import { QuestFormContext } from "@/src/contexts/questForm";
 import type { ActivityStatus } from "@/src/types/shared.types";
+import { S, props } from "./styles";
 
 interface ActivityProps extends ActivityClient {
   id: string;
@@ -74,12 +74,7 @@ export default function Activity({
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
-      <div
-        className={classnames(
-          "relative flex w-fit cursor-pointer items-center gap-1"
-        )}
-        onClick={() => setIsOpen(!isOpen)}
-      >
+      <S.IconContainer onClick={() => setIsOpen(!isOpen)}>
         <Icon
           icon={
             isUnselected
@@ -88,15 +83,14 @@ export default function Activity({
                   currentActivity.activityStatus as typeof activityStatus
                 ].icon
           }
-          className={classnames(
-            "text-3xl text-gray-900 transition-all duration-300",
-            isOpen && isUnselected ? "-rotate-90" : "",
-            !isUnselected
-              ? optionStatus[
-                  currentActivity.activityStatus as typeof activityStatus
-                ].color + " text-xl"
-              : ""
-          )}
+          className={props.Icon({
+            isUnselected,
+            isUnselectedAndOpen: isUnselected && isOpen,
+            activityStatus:
+              !isUnselected && currentActivity.activityStatus
+                ? currentActivity.activityStatus
+                : false,
+          })}
         />
         <input
           required
@@ -106,17 +100,12 @@ export default function Activity({
           defaultValue={activityStatus}
           readOnly
         />
-        <div
+        <S.OptionContainer
           ref={selectRef}
-          className={classnames(
-            "form-select absolute z-10 flex appearance-none border-0 bg-none px-2 transition-all duration-500",
-            isOpen
-              ? "opacity-100"
-              : "pointer-events-none -translate-x-12 opacity-0",
-            popUpOrientation === "vertical"
-              ? "translate-y-24 flex-col"
-              : "-translate-y-9"
-          )}
+          className={props.OptionContainer({
+            isOpen,
+            vertical: popUpOrientation === "vertical",
+          })}
         >
           <Option
             popUpOrientation={popUpOrientation}
@@ -182,14 +171,11 @@ export default function Activity({
             }}
             value="failure"
           />
-        </div>
-        <label
-          htmlFor={id}
-          className={classnames("cursor-pointer text-sm text-gray-600")}
-        >
+        </S.OptionContainer>
+        <label htmlFor={id} className="cursor-pointer text-sm text-gray-600">
           <span>{activityName}</span>
         </label>
-      </div>
+      </S.IconContainer>
       {deletable && (
         <Icon
           icon="ph:trash"
