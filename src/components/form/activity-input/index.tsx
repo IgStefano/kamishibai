@@ -3,6 +3,7 @@ import type { ComponentPropsWithoutRef, Dispatch, SetStateAction } from "react";
 import { useState } from "react";
 import type { ActivityClient } from "../checkbox/checkbox-wrapper";
 import { S, props } from "./styles";
+import Label from "../label";
 
 interface InputProps extends ComponentPropsWithoutRef<"input"> {
   label: string;
@@ -52,9 +53,7 @@ export default function ActivityInput({
 
   return (
     <div className={props.Container({ hidden })}>
-      <S.Label htmlFor="activities">
-        {label} {required && " *"}
-      </S.Label>
+      <Label htmlFor="activities" text={label} required={required} />
       <div className="relative">
         <S.Input
           id="activities"

@@ -2,6 +2,7 @@ import type { ComponentPropsWithoutRef, Dispatch, SetStateAction } from "react";
 import { useContext } from "react";
 import { QuestFormContext } from "@/src/contexts/questForm";
 import { S, props } from "./styles";
+import Label from "../label";
 
 interface InputProps extends ComponentPropsWithoutRef<"input"> {
   name: string;
@@ -33,9 +34,7 @@ export default function Input({
 
   return (
     <div className={props.Container({ hidden })}>
-      <S.Label htmlFor={name}>
-        {label} {required && " *"}
-      </S.Label>
+      <Label htmlFor={name} text={label} required={required} />
       <div className="relative">
         <S.Input
           className=" "
