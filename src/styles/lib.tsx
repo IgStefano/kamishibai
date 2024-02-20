@@ -49,6 +49,10 @@ export function styled<T extends keyof NonSVGIntrinsicElements>(
     const Component = Tag as any;
     const classNames = twMerge(defaultStyles.className, className || "");
 
+    if (Tag === "input") {
+      return <Component ref={ref} className={classNames} {...rest} />;
+    }
+
     return (
       <Component ref={ref} className={classNames} {...rest}>
         {children || ""}

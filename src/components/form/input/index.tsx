@@ -37,7 +37,6 @@ export default function Input({
       <Label htmlFor={name} text={label} required={required} />
       <div className="relative">
         <S.Input
-          className=" "
           disabled={disabled}
           required={required && !addNew}
           name={name}
