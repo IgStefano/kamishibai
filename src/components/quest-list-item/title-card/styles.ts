@@ -1,5 +1,6 @@
 import { notoSans } from "@styles/fonts";
 import { createStyles, styled } from "@styles/lib";
+import { cva } from "class-variance-authority";
 import { twMerge } from "tailwind-merge";
 
 export const S = createStyles({
@@ -23,3 +24,14 @@ export const S = createStyles({
     className: "absolute right-2 top-2 cursor-pointer",
   }),
 });
+
+export const props = {
+  Icon: cva("transform-all text-gray-50 duration-300", {
+    variants: {
+      isOpen: {
+        true: "-rotate-90",
+        false: "",
+      },
+    },
+  }),
+};

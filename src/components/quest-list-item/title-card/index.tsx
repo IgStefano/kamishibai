@@ -1,9 +1,8 @@
 import { ModalContext } from "@/src/contexts/modal";
 import type { Quest } from "@/src/types/shared.types";
 import { Icon } from "@iconify/react";
-import { classnames } from "@utils/classnames";
 import { useContext, type Dispatch, type SetStateAction } from "react";
-import { S } from "./styles";
+import { S, props } from "./styles";
 
 interface TitleCardProps {
   quest: Quest;
@@ -54,15 +53,8 @@ export default function TitleCard({
         className="p-4"
         onClick={() => (isOpen ? handleCloseQuest() : handleOpenQuest())}
       >
-        <Icon
-          icon="ph:arrow-down"
-          className={classnames(
-            "transform-all text-gray-50 duration-300",
-            isOpen ? "-rotate-90" : ""
-          )}
-        />
+        <Icon icon="ph:arrow-down" className={props.Icon({ isOpen })} />
       </div>
-
       <S.SubtitleContainer>
         <h5 className="text-xs italic text-gray-50">{name}</h5>
         {getSubtitle()}
