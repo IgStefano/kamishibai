@@ -11,8 +11,7 @@ export default function Login({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <Layout message="Entre para ver e criar aventuras">
-      <section className="flex flex-col gap-6">
-        <h4 className="w-full text-center text-base font-medium text-gray-500"></h4>
+      <section className="flex flex-col gap-6 pt-6">
         {error && (
           <p className="text-center text-sm font-bold text-burgundy-700">
             {error}
