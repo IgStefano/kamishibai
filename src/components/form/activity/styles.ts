@@ -10,6 +10,9 @@ export const S = createStyles({
     className:
       "form-select absolute z-10 flex appearance-none border-0 bg-none px-2 transition-all duration-500",
   }),
+  Label: styled("label", {
+    className: "pointer-events-none cursor-pointer text-sm text-gray-600",
+  }),
 });
 
 export const props = {

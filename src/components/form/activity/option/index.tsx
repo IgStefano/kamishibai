@@ -1,6 +1,6 @@
 import type { ActivityStatus } from "@/src/types/shared.types";
 import { Icon } from "@iconify/react";
-import { classnames } from "@utils/classnames";
+import { cva } from "class-variance-authority";
 import type { ComponentPropsWithoutRef } from "react";
 
 interface OptionProps extends ComponentPropsWithoutRef<"option"> {
@@ -38,20 +38,36 @@ export default function Option({
 }: OptionProps) {
   return (
     <span
-      className={classnames(
+      className={cva(
         "flex appearance-none gap-1 p-2 text-xs font-light text-gray-900 transition-all duration-300 hover:opacity-80 focus:opacity-80",
-        value === "failure"
-          ? "border-0"
-          : popUpOrientation === "vertical"
-          ? "border-b"
-          : "items-center border-r"
-      )}
+        {
+          variants: {
+            failure: {
+              true: "border-0",
+              false: "",
+            },
+            vertical: {
+              true: "border-b",
+              false: "",
+            },
+            horizontalAndSuccess: {
+              true: "items-center border-r",
+              false: "",
+            },
+          },
+        }
+      )({
+        failure: value === "failure",
+        vertical: value !== "failure" && popUpOrientation === "vertical",
+        horizontalAndSuccess:
+          value !== "failure" && popUpOrientation !== "vertical",
+      })}
       title={optionStatus[value].text}
       {...otherProps}
     >
       <Icon
         icon={optionStatus[value].icon}
-        className={classnames(optionStatus[value].color, "text-lg")}
+        className={cva([optionStatus[value].color, "text-lg"])()}
       />
       {popUpOrientation == "vertical" && optionStatus[value].text}
     </span>

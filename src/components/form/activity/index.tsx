@@ -172,9 +172,9 @@ export default function Activity({
             value="failure"
           />
         </S.OptionContainer>
-        <label htmlFor={id} className="cursor-pointer text-sm text-gray-600">
+        <S.Label htmlFor={id}>
           <span>{activityName}</span>
-        </label>
+        </S.Label>
       </S.IconContainer>
       {deletable && (
         <Icon
