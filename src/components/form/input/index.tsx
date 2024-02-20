@@ -1,7 +1,7 @@
-import { classnames } from "@utils/classnames";
 import type { ComponentPropsWithoutRef, Dispatch, SetStateAction } from "react";
 import { useContext } from "react";
 import { QuestFormContext } from "@/src/contexts/questForm";
+import { S, props } from "./styles";
 
 interface InputProps extends ComponentPropsWithoutRef<"input"> {
   name: string;
@@ -32,13 +32,13 @@ export default function Input({
   ) as keyof typeof state;
 
   return (
-    <div className={classnames(hidden ? "hidden" : "flex w-full flex-col")}>
-      <label className="pb-1 text-xs text-burgundy" htmlFor={name}>
+    <div className={props.Container({ hidden })}>
+      <S.Label htmlFor={name}>
         {label} {required && " *"}
-      </label>
+      </S.Label>
       <div className="relative">
-        <input
-          className="w-full rounded border border-gray-50 bg-lightYellow p-2 text-xs transition-all duration-300 focus-visible:border-solid focus-visible:border-burgundy disabled:bg-gray-200 disabled:text-gray-900 disabled:opacity-80 "
+        <S.Input
+          className=" "
           disabled={disabled}
           required={required && !addNew}
           name={name}
